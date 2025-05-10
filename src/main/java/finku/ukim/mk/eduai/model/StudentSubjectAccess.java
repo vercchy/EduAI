@@ -25,7 +25,7 @@ public class StudentSubjectAccess {
 
     @ManyToOne
     @MapsId("studentId")
-    @JoinColumn(name = "student_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "student_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private Student student;
 
     @ManyToOne
