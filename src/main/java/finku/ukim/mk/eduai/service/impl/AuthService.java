@@ -3,6 +3,7 @@ package finku.ukim.mk.eduai.service.impl;
 import finku.ukim.mk.eduai.dto.LoginRequest;
 import finku.ukim.mk.eduai.dto.LoginResponse;
 import finku.ukim.mk.eduai.dto.RegisterRequest;
+import finku.ukim.mk.eduai.exception.InvalidRoleException;
 import finku.ukim.mk.eduai.model.*;
 import finku.ukim.mk.eduai.repository.StudentRepository;
 import finku.ukim.mk.eduai.repository.TeacherRepository;
@@ -80,7 +81,7 @@ public class AuthService implements AuthServiceInterface {
                 teacher.setEmploymentStatus(EmploymentStatus.FULL_TIME);
                 teacherRepository.save(teacher);
             }
-            default -> throw new IllegalStateException("Unexpected role: " + role);
+            default -> throw new InvalidRoleException("Invalid role: " + role);
         }
     }
 
