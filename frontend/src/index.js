@@ -13,6 +13,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import logo from './assets/eduAI_logo.svg';
 import zhurka_slika from './assets/zhurkaaa.svg';
+import UpcomingTestsPage from "./pages/UpcomingTestsPage";
+import TakenTestsPage from "./pages/TakenTestsPage";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
@@ -25,27 +29,7 @@ reportWebVitals();
 function App() {
     return (
         <>
-            {/* Navbar */}
-            <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
-                <a className="navbar-brand" href="#">
-                    <img src={logo} alt="EduAI Logo" width="80" height="80"/>
-                </a>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarContent">
-                    <ul className="navbar-nav ms-4">
-                        <li className="nav-item"><a className="nav-link" href="#">Home</a></li>
-                        <li className="nav-item"><a className="nav-link" href="#">Courses</a></li>
-                        <li className="nav-item"><a className="nav-link" href="#">About Us</a></li>
-                        <li className="nav-item"><a className="nav-link" href="#">Contact</a></li>
-                    </ul>
-                    <div className="ms-auto">
-                        <a className="btn btn-link" href="#">Sign Up</a>
-                        <a className="btn btn-custom-color text-white ms-2" href="#">Login</a>
-                    </div>
-                </div>
-            </nav>
+            <Navbar/>
 
             {/* Sign Up Section */}
             <div className="container my-5">
@@ -98,37 +82,7 @@ function App() {
                 </div>
             </div>
 
-            {/* Footer */}
-            <footer className="bg-light py-5 mt-5">
-                <div className="container">
-                    <div className="row text-center text-md-start">
-                        <div className="col-md-3 mb-4">
-                            <h5>EduAI</h5>
-                            <p><i className="bi bi-envelope"></i> hello@eduai.com</p>
-                            <p><i className="bi bi-telephone"></i> +389 70 123 456</p>
-                            <p><i className="bi bi-geo-alt"></i> Skopje</p>
-                        </div>
-
-                        <div className="col-md-3 mb-4">
-                            <h6>Home</h6>
-                            <ul className="list-unstyled">
-                                <li>Benefits</li>
-                                <li>Our Courses</li>
-                                <li>Our FAQ</li>
-                            </ul>
-                        </div>
-
-                        <div className="col-md-3 mb-4">
-                            <h6>About Us</h6>
-                            <ul className="list-unstyled">
-                                <li>Company</li>
-                                <li>Achievements</li>
-                                <li>Our Goals</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            <Footer/>
         </>
     );
 }
@@ -147,6 +101,8 @@ root.render(
                 <Route path="/home" element={<App />} />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/student" element={<Student/>} />
+                <Route path="/upcoming-tests" element={<UpcomingTestsPage/>} />
+                <Route path="/taken-tests" element={<TakenTestsPage/>} />
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>
