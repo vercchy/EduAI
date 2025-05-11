@@ -13,8 +13,8 @@ function UpcomingTestCard({ index, id, title, description }) {
                 <div className="card-footer bg-white border-0 d-flex align-items-center text-muted p-5">
                     <span className="primary-color bg-light rounded p-3 ms-auto fw-bold">
                         <a href={`test/${id}/results`} className="text-reset text-decoration-none">
-                            <i className="bi bi-arrow-up-right me-2"></i>
-                            <span> View results</span>
+                            <span className="me-3">↗</span>
+                            View results
                         </a>
                     </span>
                 </div>
