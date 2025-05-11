@@ -3,6 +3,7 @@ package finku.ukim.mk.eduai.controller;
 import finku.ukim.mk.eduai.dto.LoginRequest;
 import finku.ukim.mk.eduai.dto.LoginResponse;
 import finku.ukim.mk.eduai.dto.RegisterRequest;
+import finku.ukim.mk.eduai.model.User;
 import finku.ukim.mk.eduai.service.interfaces.AuthServiceInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
-            authService.register(request);
+            User user = authService.register(request);
+            authService.createRoleSpecificEntity(user);
             return ResponseEntity.ok("Successfully registered");
         } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

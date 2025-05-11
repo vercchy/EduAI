@@ -15,6 +15,14 @@ import java.time.LocalDateTime;
 @Builder
 public class Subject {
 
+    public Subject(String name, String description, DifficultyLevel difficultyLevel, Teacher teacher) {
+        this.name = name;
+        this.description = description;
+        this.difficultyLevel = difficultyLevel;
+        this.createdAt = LocalDateTime.now();
+        this.teacher = teacher;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +31,7 @@ public class Subject {
     private String name;
 
     private String description;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "difficulty_level")
     private DifficultyLevel difficultyLevel;

@@ -11,12 +11,11 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Teacher {
-
     @Id
     @Column(name = "user_id")
     private Long userId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;

@@ -3,8 +3,9 @@ package finku.ukim.mk.eduai.service.impl;
 import finku.ukim.mk.eduai.dto.LoginRequest;
 import finku.ukim.mk.eduai.dto.LoginResponse;
 import finku.ukim.mk.eduai.dto.RegisterRequest;
-import finku.ukim.mk.eduai.model.Role;
-import finku.ukim.mk.eduai.model.User;
+import finku.ukim.mk.eduai.model.*;
+import finku.ukim.mk.eduai.repository.StudentRepository;
+import finku.ukim.mk.eduai.repository.TeacherRepository;
 import finku.ukim.mk.eduai.repository.UserRepository;
 import finku.ukim.mk.eduai.security.JwtUtil;
 import finku.ukim.mk.eduai.service.CustomUserDetailsService;
@@ -15,9 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 public class AuthService implements AuthServiceInterface {
@@ -27,21 +26,25 @@ public class AuthService implements AuthServiceInterface {
     private final CustomUserDetailsService customUserDetailsService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
     public AuthService(AuthenticationManager authenticationManager,
                        JwtUtil jwtUtil,
                        CustomUserDetailsService customUserDetailsService,
                        UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, StudentRepository studentRepository, TeacherRepository teacherRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.customUserDetailsService = customUserDetailsService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.studentRepository = studentRepository;
+        this.teacherRepository = teacherRepository;
     }
 
     @Override
-    public void register(RegisterRequest registerRequest) {
+    public User register(RegisterRequest registerRequest) {
         String email = registerRequest.getEmail();
         if (userRepository.findUserByEmail(email).isPresent())
             throw new IllegalArgumentException("Email Already Registered");
@@ -57,6 +60,28 @@ public class AuthService implements AuthServiceInterface {
                 role
         );
         userRepository.save(newUser);
+        userRepository.flush();
+        return newUser;
+    }
+
+    @Override
+    public void createRoleSpecificEntity(User user) {
+        Role role = user.getRole();
+        switch(role) {
+            case STUDENT ->  {
+                Student student = new Student();
+                student.setUser(user);
+                studentRepository.save(student);
+            }
+            case PROFESSOR ->
+            {
+                Teacher teacher = new Teacher();
+                teacher.setUser(user);
+                teacher.setEmploymentStatus(EmploymentStatus.FULL_TIME);
+                teacherRepository.save(teacher);
+            }
+            default -> throw new IllegalStateException("Unexpected role: " + role);
+        }
     }
 
     @Override
