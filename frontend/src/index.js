@@ -17,6 +17,7 @@ import UpcomingTestsPage from "./pages/UpcomingTestsPage";
 import TakenTestsPage from "./pages/TakenTestsPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import TestInProgress from "./pages/TestInProgress";
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
@@ -103,6 +104,7 @@ root.render(
                 <Route path="/student" element={<Student/>} />
                 <Route path="/upcoming-tests" element={<UpcomingTestsPage/>} />
                 <Route path="/taken-tests" element={<TakenTestsPage/>} />
+                <Route path="/TestInProgress" element={<TestInProgress/>} />
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>
