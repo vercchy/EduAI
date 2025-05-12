@@ -5,11 +5,11 @@ services:
     build: .
     container_name: EduAI
     ports:
-      - "8080:8080"
+      - "9090:8080"
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/eduAI_UIKTP
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/EduAI_UIKTP
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
@@ -21,7 +21,7 @@ services:
     container_name: EduAI_db
     restart: always
     environment:
-      POSTGRES_DB: eduAI_UIKTP
+      POSTGRES_DB: EduAI_UIKTP
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:

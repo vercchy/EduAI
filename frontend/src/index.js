@@ -1,6 +1,7 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
 
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
