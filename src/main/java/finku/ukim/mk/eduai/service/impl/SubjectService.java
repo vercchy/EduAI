@@ -3,11 +3,15 @@ package finku.ukim.mk.eduai.service.impl;
 import finku.ukim.mk.eduai.dto.AssignStudentToSubjectRequest;
 import finku.ukim.mk.eduai.dto.SubjectCreateRequest;
 import finku.ukim.mk.eduai.dto.SubjectCreateResponse;
+import finku.ukim.mk.eduai.dto.SubjectDTO;
 import finku.ukim.mk.eduai.exception.*;
 import finku.ukim.mk.eduai.model.*;
 import finku.ukim.mk.eduai.repository.*;
 import finku.ukim.mk.eduai.service.interfaces.SubjectServiceInterface;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SubjectService implements SubjectServiceInterface {
@@ -68,4 +72,17 @@ public class SubjectService implements SubjectServiceInterface {
                 .build();
         studentSubjectAccessRepository.save(access);
     }
+
+    public SubjectDTO getSubjectById(Long id) {
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
+
+        List<String> studentEmails = subject.getAssignedStudents()
+                .stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
+
+        return new SubjectDTO(subject.getId(), subject.getName(), subject.getDescription(), studentEmails);
+    }
+
 }

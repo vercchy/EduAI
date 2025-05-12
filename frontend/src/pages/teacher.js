@@ -22,13 +22,15 @@ import { root } from "../index"
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-function Student() {
+function Teacher() {
     return (
         <>
             <Navbar/>
-
             <div>
-                <div className="h2 px-4 mb-2">Enrolled Courses </div>
+                <div className="px-4 mb-2">
+                    <button className="btn btn-danger">Add a new course</button>
+                </div>
+                <div className="h2 px-4 mb-2">Your Courses </div>
                 <div className="h6 px-4 mb-2">Mobile App Development</div>
                 <div className="d-flex justify-content-between align-items-center px-4 mb-5">
                     <div className="me-3">
@@ -77,6 +79,6 @@ function Student() {
 
 
 
-export default Student;
+export default Teacher;
 
 

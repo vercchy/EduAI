@@ -3,6 +3,7 @@ package finku.ukim.mk.eduai.controller;
 import finku.ukim.mk.eduai.dto.AssignStudentToSubjectRequest;
 import finku.ukim.mk.eduai.dto.SubjectCreateRequest;
 import finku.ukim.mk.eduai.dto.SubjectCreateResponse;
+import finku.ukim.mk.eduai.dto.SubjectDTO;
 import finku.ukim.mk.eduai.security.SecurityUtils;
 import finku.ukim.mk.eduai.service.interfaces.SubjectServiceInterface;
 import jakarta.validation.Valid;
@@ -35,5 +36,9 @@ public class SubjectController {
         String email = SecurityUtils.getEmail(authentication);
         subjectService.assignStudentsToSubject(request, email);
         return ResponseEntity.ok("Access successfully assigned to student.");
+    }
+    @GetMapping("/api/subjects/{id}")
+    public ResponseEntity<SubjectDTO> getSubject(@PathVariable Long id) {
+        return ResponseEntity.ok(subjectService.getSubjectById(id));
     }
 }
