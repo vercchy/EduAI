@@ -1,17 +1,12 @@
 package finku.ukim.mk.eduai.service.impl;
 
-import finku.ukim.mk.eduai.dto.AssignStudentToSubjectRequest;
-import finku.ukim.mk.eduai.dto.SubjectCreateRequest;
-import finku.ukim.mk.eduai.dto.SubjectCreateResponse;
-import finku.ukim.mk.eduai.dto.SubjectDTO;
+import finku.ukim.mk.eduai.dto.*;
 import finku.ukim.mk.eduai.exception.*;
 import finku.ukim.mk.eduai.model.*;
 import finku.ukim.mk.eduai.repository.*;
 import finku.ukim.mk.eduai.service.interfaces.SubjectServiceInterface;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SubjectService implements SubjectServiceInterface {
@@ -27,6 +22,51 @@ public class SubjectService implements SubjectServiceInterface {
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;
         this.studentSubjectAccessRepository = studentSubjectAccessRepository;
+    }
+
+    @Override
+    public List<SubjectBasicInfoDto> getSubjectsByRole(String email, String role) {
+        List<Subject> subjects;
+
+        switch (role) {
+            case "PROFESSOR" -> subjects = subjectRepository.findAllByTeacherUserEmail(email);
+            case "STUDENT" -> subjects = studentSubjectAccessRepository.findAllByStudentUserEmail(email)
+                    .stream()
+                    .map(StudentSubjectAccess::getSubject)
+                    .toList();
+            default -> throw new InvalidRoleException("Invalid role: " + role);
+        }
+        return subjects.stream()
+                .map(subject -> {
+                    User professor = subject.getTeacher().getUser();
+                    return new SubjectBasicInfoDto(
+                            subject.getId(),
+                            subject.getName(),
+                            professor.getFullName());
+                })
+                .toList();
+    }
+
+    @Override
+    public SubjectDetailsDto getSubjectDetails(Long subjectId, String email, String role) {
+        var doesSubjectExist = false;
+        switch (role) {
+            case "PROFESSOR" -> doesSubjectExist = subjectRepository.existsByIdAndTeacherUserEmail(subjectId, email);
+            case "STUDENT" -> doesSubjectExist = studentSubjectAccessRepository.existsBySubjectIdAndStudentUserEmail(subjectId, email);
+            default -> throw new InvalidRoleException("Invalid role: " + role);
+        }
+        if (!doesSubjectExist)
+            throw new UnauthorizedActionException("User with email " + email + " is not authorized to view this subject");
+
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(
+                () -> new ResourceNotFoundException("Subject with id " + subjectId + " not found"));
+        List<UserDto> students = studentSubjectAccessRepository.findAllBySubjectId(subjectId)
+                .stream()
+                .map(access -> access.getStudent().getUser())
+                .map(UserDto::new)
+                .toList();
+
+        return new SubjectDetailsDto(subject, students);
     }
 
     @Override
@@ -56,7 +96,7 @@ public class SubjectService implements SubjectServiceInterface {
         var studentEmail = request.getStudentEmail();
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject with id " + subjectId + " not found."));
-        if (!teacherRepository.findByUserEmail(teacherEmail).isPresent() || !subject.getTeacher().getUser().getEmail().equals(teacherEmail))
+        if (teacherRepository.findByUserEmail(teacherEmail).isEmpty() || !subject.getTeacher().getUser().getEmail().equals(teacherEmail))
             throw new UnauthorizedActionException("You do not have permission to assign students to this subject.");
         Student student = studentRepository.findByUserEmail(studentEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Student record not found for email: " + studentEmail));
@@ -72,17 +112,4 @@ public class SubjectService implements SubjectServiceInterface {
                 .build();
         studentSubjectAccessRepository.save(access);
     }
-
-    public SubjectDTO getSubjectById(Long id) {
-        Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-
-        List<String> studentEmails = subject.getAssignedStudents()
-                .stream()
-                .map(User::getEmail)
-                .collect(Collectors.toList());
-
-        return new SubjectDTO(subject.getId(), subject.getName(), subject.getDescription(), studentEmails);
-    }
-
 }
