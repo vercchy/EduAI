@@ -1,6 +1,7 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
 
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from '../reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,7 +10,8 @@ import logo from '../assets/eduAI_logo.svg';
 import zhurka_slika from '../assets/zhurkaaa.svg';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
+import { root } from "../index"
+import {useNavigate} from "react-router-dom";
 
 
 // If you want to start measuring performance in your app, pass a function
@@ -18,6 +20,45 @@ import Footer from "../components/Footer";
 reportWebVitals();
 
 function Login() {
+    const navigate = useNavigate(); // Hook to navigate after successful login
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccess('');
+
+        try {
+            const response = await axios.post('http://localhost:9090/auth/login', {
+                email: formData.email,
+                password: formData.password
+            });
+
+            // Assuming the response contains the token
+            localStorage.setItem('token', response.data.token); // Store token in localStorage
+
+            setSuccess('Login successful!'); // You can use this to show a success message
+
+            // Redirect the user to the dashboard or another protected route
+            navigate('/student');
+        } catch (err) {
+            setError(err.response?.data || 'Login failed');
+        }
+    };
     return (
         <>
             <Navbar/>
@@ -59,42 +100,42 @@ function Login() {
 
                     {/* Form */}
                     <div className="col-md-6">
-                        <h2 className="fw-bold mb-2">Sign Up</h2>
-                        <p className="mb-4 text-muted">Create an account for free.</p>
+                        <h2 className="fw-bold mb-2">Sign In</h2>
+                        <p className="mb-4 text-muted">We'll be happy to see you!</p>
 
-                        <form>
-                            <div className="mb-3">
-                                <label className="form-label">Full Name</label>
-                                <input type="text" className="form-control" placeholder="Enter your Name" />
-                            </div>
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        {success && <div className="alert alert-success">{success}</div>}
 
+                        <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label className="form-label">Email</label>
-                                <input type="email" className="form-control" placeholder="Enter your Email" />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className="form-control"
+                                    placeholder="Enter your Email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
                             </div>
 
                             <div className="mb-3">
                                 <label className="form-label">Password</label>
-                                <input type="password" className="form-control" placeholder="Enter your Password" />
+                                <input
+                                    type="password"
+                                    name="password"
+                                    className="form-control"
+                                    placeholder="Enter your Password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
                             </div>
 
-                            <div className="form-check mb-3">
-                                <input className="form-check-input" type="checkbox" />
-                                <label className="form-check-label">
-                                    I agree with <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
-                                </label>
-                            </div>
-
-                            <button type="submit" className="btn btn-custom-color w-100 text-white mb-3">Sign Up</button>
-                            <div className="text-center mb-3 text-muted">OR</div>
-                            <button type="button" className="btn btn-light w-100 border">
-                                <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="google" className="me-2" />
-                                Sign Up with Google
-                            </button>
-
+                            <button type="submit" className="btn btn-custom-color w-100 text-white mb-3">Login</button>
                             <p className="text-center mt-4">
-                                Already have an account? <a href="#">Login</a> <span>↗</span>
+                                Don't have an account? <a href="/home">Sign Up</a> <span>↗</span>
                             </p>
+
                         </form>
                     </div>
                 </div>
@@ -104,13 +145,6 @@ function Login() {
         </>
     );
 }
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-    <React.StrictMode>
-        <Login />
-    </React.StrictMode>
-);
 
 export default Login;
 

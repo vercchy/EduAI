@@ -1,8 +1,11 @@
 package finku.ukim.mk.eduai.dto;
 
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterRequest {
     private String firstName;
     private String lastName;

@@ -1,6 +1,7 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
 
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import ReactDOM from 'react-dom/client';
 import {Routes, Route, BrowserRouter} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
@@ -17,6 +18,9 @@ import UpcomingTestsPage from "./pages/UpcomingTestsPage";
 import TakenTestsPage from "./pages/TakenTestsPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Teacher from "./pages/teacher";
+import AddSubject from "./pages/add-subject";
+import Subject from "./pages/subject";
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
@@ -27,6 +31,45 @@ reportWebVitals();
 
 
 function App() {
+    const [formData, setFormData] = useState({
+        fullName: '',
+        email: '',
+        password: ''
+    });
+
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccess('');
+
+        try {
+            // Assume fullName = firstName + " " + lastName
+            const [firstName, ...rest] = formData.fullName.split(' ');
+            const lastName = rest.join(' ');
+
+            const response = await axios.post('http://localhost:9090/auth/register', {
+                firstName,
+                lastName,
+                email: formData.email,
+                password: formData.password
+            });
+
+            setSuccess(response.data); // Example: "User registered successfully"
+        } catch (err) {
+            setError(err.response?.data || 'Registration failed');
+        }
+    };
     return (
         <>
             <Navbar/>
@@ -34,32 +77,51 @@ function App() {
             {/* Sign Up Section */}
             <div className="container my-5">
                 <div className="row align-items-center">
-                    {/* Form */}
                     <div className="col-md-6">
                         <h2 className="fw-bold mb-2">Sign Up</h2>
                         <p className="mb-4 text-muted">Create an account for free.</p>
 
-                        <form>
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        {success && <div className="alert alert-success">{success}</div>}
+
+                        <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label className="form-label">Full Name</label>
-                                <input type="text" className="form-control" placeholder="Enter your Name" />
+                                <input
+                                    type="text"
+                                    name="fullName"
+                                    className="form-control"
+                                    placeholder="Enter your Name"
+                                    value={formData.fullName}
+                                    onChange={handleChange}
+                                    required
+                                />
                             </div>
 
                             <div className="mb-3">
                                 <label className="form-label">Email</label>
-                                <input type="email" className="form-control" placeholder="Enter your Email" />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    className="form-control"
+                                    placeholder="Enter your Email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                />
                             </div>
 
                             <div className="mb-3">
                                 <label className="form-label">Password</label>
-                                <input type="password" className="form-control" placeholder="Enter your Password" />
-                            </div>
-
-                            <div className="form-check mb-3">
-                                <input className="form-check-input" type="checkbox" />
-                                <label className="form-check-label">
-                                    I agree with <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
-                                </label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    className="form-control"
+                                    placeholder="Enter your Password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                />
                             </div>
 
                             <button type="submit" className="btn btn-custom-color w-100 text-white mb-3">Sign Up</button>
@@ -70,12 +132,11 @@ function App() {
                             </button>
 
                             <p className="text-center mt-4">
-                                Already have an account? <a href="#">Login</a> <span>↗</span>
+                                Already have an account? <a href="/login">Login</a> <span>↗</span>
                             </p>
                         </form>
                     </div>
 
-                    {/* Illustration */}
                     <div className="col-md-6 text-center">
                         <img src={zhurka_slika} alt="Zhurka" width="500" height="500" />
                     </div>
@@ -93,7 +154,7 @@ function App() {
 //         <App />
 //     </React.StrictMode>
 // );
-const root = ReactDOM.createRoot(document.getElementById('root'));
+export const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <BrowserRouter>
@@ -103,6 +164,9 @@ root.render(
                 <Route path="/student" element={<Student/>} />
                 <Route path="/upcoming-tests" element={<UpcomingTestsPage/>} />
                 <Route path="/taken-tests" element={<TakenTestsPage/>} />
+                <Route path="/teacher" element={<Teacher/>} />
+                <Route path="/add-subject" element={<AddSubject/>} />
+                <Route path="/subject" element={<Subject/>} />
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>
