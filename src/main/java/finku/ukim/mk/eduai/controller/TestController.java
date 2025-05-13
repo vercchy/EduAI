@@ -1,4 +1,4 @@
-package finku.ukim.mk.eduai.web;
+package finku.ukim.mk.eduai.controller;
 
 import finku.ukim.mk.eduai.dto.TestMetadataDTO;
 import finku.ukim.mk.eduai.service.impl.TestService;
