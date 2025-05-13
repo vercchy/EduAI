@@ -9,9 +9,13 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class StudentSubjectAccessId implements Serializable {
 
     private Long studentId;
     private Long subjectId;
+
+    public StudentSubjectAccessId(Long studentId, Long subjectId) {
+        this.studentId = studentId;
+        this.subjectId = subjectId;
+    }
 }

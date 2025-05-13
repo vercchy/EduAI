@@ -32,4 +32,6 @@ public class StudentSubjectAccess {
     @MapsId("subjectId")
     @JoinColumn(name = "subject_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Subject subject;
+
+
 }
