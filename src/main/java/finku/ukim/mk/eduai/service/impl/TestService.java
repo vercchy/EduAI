@@ -46,9 +46,9 @@ public class TestService implements TestServiceInterface {
 
 
     @Override
-    public List<TestMetadataDTO> getAvailableTestsForSubject(Long subjectId, Long studentId) {
-        StudentSubjectAccess access = studentSubjectAccessRepository
-                .findById_StudentIdAndId_SubjectId(studentId, subjectId)
+    public List<TestMetadataDTO> getAvailableTestsForSubject(Long subjectId, String studentEmail) {
+        studentSubjectAccessRepository
+                .findBySubjectIdAndStudentUserEmail(subjectId, studentEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Student is not assigned to this subject"));
 
         List<Test> tests = testRepository.findBySubjectId(subjectId)
@@ -57,13 +57,19 @@ public class TestService implements TestServiceInterface {
                         test.getEndDate().isAfter(LocalDateTime.now()))
                 .toList();
 
-        return tests.stream().map(test -> new TestMetadataDTO(
-                test.getId(),
-                test.getTitle(),
-                test.getDescription(),
-                test.getStartDate(),
-                test.getEndDate()
-        )).collect(Collectors.toList());
+        return tests.stream()
+                .map(TestMetadataDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TestMetadataDTO> getTestsByProfessorAndSubject(Long subjectId, String professorEmail) {
+        obtainSubjectByIdAndTeacherEmail(subjectId, professorEmail);
+        return testRepository
+                .findBySubjectId(subjectId)
+                .stream()
+                .map(TestMetadataDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,21 +77,14 @@ public class TestService implements TestServiceInterface {
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new ResourceNotFoundException("Test not found"));
 
-        return new TestMetadataDTO(
-                test.getId(),
-                test.getTitle(),
-                test.getDescription(),
-                test.getStartDate(),
-                test.getEndDate()
-        );
+        return new TestMetadataDTO(test);
     }
 
     @Override
     @Transactional
     public void createTest(CreateTestDto createTestDto, String professorEmail) {
         BasicTestCreationInfoDto basicTestInfo = createTestDto.getBasicTestCreationInfo();
-        Subject subject = subjectRepository.findByIdAndTeacherUserEmail(basicTestInfo.getSubjectId(), professorEmail)
-                .orElseThrow(() -> new UnauthorizedActionException("Invalid subject or no permission"));
+        Subject subject = obtainSubjectByIdAndTeacherEmail(basicTestInfo.getSubjectId(), professorEmail);
         validateTestDates(basicTestInfo.getStartDate(), basicTestInfo.getEndDate());
         validateTotalQuestionPoints(createTestDto.getQuestions(), basicTestInfo.getMaxPoints());
 
@@ -146,5 +145,10 @@ public class TestService implements TestServiceInterface {
         if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
             throw new ForbiddenOperationException("Start date must be before end date.");
         }
+    }
+
+    private Subject obtainSubjectByIdAndTeacherEmail(Long subjectId, String email) {
+        return subjectRepository.findByIdAndTeacherUserEmail(subjectId, email)
+                .orElseThrow(() -> new UnauthorizedActionException("Invalid subject or no permission"));
     }
 }

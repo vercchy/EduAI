@@ -24,8 +24,15 @@ public class TestController {
     @GetMapping("/available-tests/subject/{subjectId}")
     public List<TestMetadataDTO> getAvailableTestsForSubject(
             @PathVariable Long subjectId,
-            @RequestParam Long studentId) {
-        return testService.getAvailableTestsForSubject(subjectId, studentId);
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return testService.getAvailableTestsForSubject(subjectId, userDetails.getUsername());
+    }
+
+    @GetMapping("/subject/{subjectId}")
+    public List<TestMetadataDTO> getTestsByProfessorAndSubject(
+            @PathVariable Long subjectId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return testService.getTestsByProfessorAndSubject(subjectId, userDetails.getUsername());
     }
 
     @GetMapping("/{testId}")
