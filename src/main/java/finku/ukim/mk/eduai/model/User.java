@@ -103,4 +103,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+    public String getFullName() {
+        return String.format("%s %s", firstName, lastName);
+    }
 }
