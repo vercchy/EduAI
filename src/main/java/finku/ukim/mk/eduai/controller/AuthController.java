@@ -23,8 +23,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
-            User user = authService.register(request);
-            authService.createRoleSpecificEntity(user);
+            authService.register(request);
             return ResponseEntity.ok("Successfully registered");
         } catch (RuntimeException ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

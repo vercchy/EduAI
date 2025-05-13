@@ -11,6 +11,7 @@ import finku.ukim.mk.eduai.repository.UserRepository;
 import finku.ukim.mk.eduai.security.JwtUtil;
 import finku.ukim.mk.eduai.service.CustomUserDetailsService;
 import finku.ukim.mk.eduai.service.interfaces.AuthServiceInterface;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,6 +46,7 @@ public class AuthService implements AuthServiceInterface {
     }
 
     @Override
+    @Transactional
     public User register(RegisterRequest registerRequest) {
         String email = registerRequest.getEmail();
         if (userRepository.findUserByEmail(email).isPresent())
@@ -62,6 +64,7 @@ public class AuthService implements AuthServiceInterface {
         );
         userRepository.save(newUser);
         userRepository.flush();
+        createRoleSpecificEntity(newUser);
         return newUser;
     }
 
