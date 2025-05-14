@@ -7,9 +7,9 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class QuestionDto {
+public class CreateQuestionDto {
     private String questionText;
     private int questionType;
     private float maxPoints;
-    private List<AnswerDto> answers;
+    private List<CreateAnswerDto> answers;
 }
