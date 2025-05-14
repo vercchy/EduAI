@@ -91,14 +91,14 @@ public class TestService implements TestServiceInterface {
         Test test = createTestForSubject(basicTestInfo, subject);
         testRepository.save(test);
 
-        for (QuestionDto questionDto : createTestDto.getQuestions()) {
-            List<AnswerDto> answersPerQuestion = questionDto.getAnswers();
-            validateQuestionTypeCompatibilityWithNumberOfCorrectAnswers(answersPerQuestion, questionDto.getQuestionType());
-            Question question = questionService.createQuestionForTestFromQuestionDto(questionDto, test);
+        for (CreateQuestionDto createQuestionDto : createTestDto.getQuestions()) {
+            List<CreateAnswerDto> answersPerQuestion = createQuestionDto.getAnswers();
+            validateQuestionTypeCompatibilityWithNumberOfCorrectAnswers(answersPerQuestion, createQuestionDto.getQuestionType());
+            Question question = questionService.createQuestionForTestFromQuestionDto(createQuestionDto, test);
             questionRepository.save(question);
 
-            for (AnswerDto answerDto : answersPerQuestion) {
-                Answer answer = answerService.createAnswerForTestQuestion(answerDto, question);
+            for (CreateAnswerDto createAnswerDto : answersPerQuestion) {
+                Answer answer = answerService.createAnswerForTestQuestion(createAnswerDto, question);
                 answerRepository.save(answer);
             }
         }
@@ -116,9 +116,9 @@ public class TestService implements TestServiceInterface {
                 .build();
     }
 
-    private void validateTotalQuestionPoints(List<QuestionDto> questions, int testMaxPoints) {
+    private void validateTotalQuestionPoints(List<CreateQuestionDto> questions, int testMaxPoints) {
         double totalPoints = questions.stream()
-                .mapToDouble(QuestionDto::getMaxPoints)
+                .mapToDouble(CreateQuestionDto::getMaxPoints)
                 .sum();
 
         if (totalPoints != testMaxPoints) {
@@ -127,9 +127,9 @@ public class TestService implements TestServiceInterface {
         }
     }
 
-    private void validateQuestionTypeCompatibilityWithNumberOfCorrectAnswers(List<AnswerDto> answers, int questionType) {
+    private void validateQuestionTypeCompatibilityWithNumberOfCorrectAnswers(List<CreateAnswerDto> answers, int questionType) {
         int numberOfCorrectAnswers = Math.toIntExact(answers.stream()
-                .filter(AnswerDto::getIsCorrect)
+                .filter(CreateAnswerDto::getIsCorrect)
                 .count());
         boolean isCompatible = false;
         switch (questionType) {

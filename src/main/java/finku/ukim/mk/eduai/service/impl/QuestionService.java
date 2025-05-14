@@ -1,6 +1,6 @@
 package finku.ukim.mk.eduai.service.impl;
 
-import finku.ukim.mk.eduai.dto.QuestionDto;
+import finku.ukim.mk.eduai.dto.CreateQuestionDto;
 import finku.ukim.mk.eduai.model.Question;
 import finku.ukim.mk.eduai.model.QuestionType;
 import finku.ukim.mk.eduai.model.Test;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuestionService implements QuestionServiceInterface {
     @Override
-    public Question createQuestionForTestFromQuestionDto(QuestionDto questionDto, Test test) {
-        QuestionType questionType = QuestionType.fromOrdinal(questionDto.getQuestionType());
+    public Question createQuestionForTestFromQuestionDto(CreateQuestionDto createQuestionDto, Test test) {
+        QuestionType questionType = QuestionType.fromOrdinal(createQuestionDto.getQuestionType());
 
         return Question.builder()
-                .questionText(questionDto.getQuestionText())
+                .questionText(createQuestionDto.getQuestionText())
                 .questionType(questionType)
-                .maxPoints(questionDto.getMaxPoints())
+                .maxPoints(createQuestionDto.getMaxPoints())
                 .test(test)
                 .build();
     }
