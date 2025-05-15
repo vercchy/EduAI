@@ -25,4 +25,9 @@ public class Response {
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
+
+    public Response(TestAttempt testAttempt, Question question) {
+        this.testAttempt = testAttempt;
+        this.question = question;
+    }
 }

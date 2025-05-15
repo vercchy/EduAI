@@ -23,4 +23,9 @@ public class ChoiceResponseAnswer {
     @ManyToOne
     @JoinColumn(name = "answer_id", nullable = false)
     private Answer answer;
+
+    public ChoiceResponseAnswer(ChoiceResponse choiceResponse, Answer answer) {
+        this.choiceResponse = choiceResponse;
+        this.answer = answer;
+    }
 }

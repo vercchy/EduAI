@@ -20,4 +20,8 @@ public class ChoiceResponse {
     @MapsId
     @JoinColumn(name = "response_id")
     private Response response;
+
+    public ChoiceResponse(Response response) {
+        this.response = response;
+    }
 }
