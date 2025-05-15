@@ -1,7 +1,7 @@
 package finku.ukim.mk.eduai.controller;
 
 
-import finku.ukim.mk.eduai.service.AiService;
+import finku.ukim.mk.eduai.service.impl.AiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,7 @@ public class AiController {
     public ResponseEntity<String> evaluateStudentAnswer(@RequestBody Map<String, String> request) {
         String question = request.get("question");
         String answer = request.get("answer");
-        String evaluationResult = service.evaluateStudentAnswer(question, answer);
+        String evaluationResult = service.evaluateStudentAnswer(question, answer, 10.f);
         return ResponseEntity.ok(evaluationResult);
     }
 

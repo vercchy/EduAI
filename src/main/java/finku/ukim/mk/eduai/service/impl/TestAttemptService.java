@@ -7,6 +7,7 @@ import finku.ukim.mk.eduai.exception.ResourceNotFoundException;
 import finku.ukim.mk.eduai.exception.UnauthorizedActionException;
 import finku.ukim.mk.eduai.model.*;
 import finku.ukim.mk.eduai.repository.*;
+import finku.ukim.mk.eduai.service.interfaces.OpenEndedEvaluationServiceInterface;
 import finku.ukim.mk.eduai.service.interfaces.TestAttemptServiceInterface;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class TestAttemptService implements TestAttemptServiceInterface {
     private final OpenEndedResponseRepository openEndedResponseRepository;
     private final ChoiceResponseRepository choiceResponseRepository;
     private final ChoiceResponseAnswerRepository choiceResponseAnswerRepository;
+    private final OpenEndedEvaluationServiceInterface openEndedEvaluationService;
 
     public TestAttemptService(
             TestRepository testRepository,
@@ -39,7 +41,8 @@ public class TestAttemptService implements TestAttemptServiceInterface {
             ResponseRepository responseRepository,
             OpenEndedResponseRepository openEndedResponseRepository,
             ChoiceResponseRepository choiceResponseRepository,
-            ChoiceResponseAnswerRepository choiceResponseAnswerRepository
+            ChoiceResponseAnswerRepository choiceResponseAnswerRepository,
+            OpenEndedEvaluationServiceInterface openEndedEvaluationService
     ) {
         this.testRepository = testRepository;
         this.studentSubjectAccessRepository = studentSubjectAccessRepository;
@@ -50,6 +53,7 @@ public class TestAttemptService implements TestAttemptServiceInterface {
         this.openEndedResponseRepository = openEndedResponseRepository;
         this.choiceResponseRepository = choiceResponseRepository;
         this.choiceResponseAnswerRepository = choiceResponseAnswerRepository;
+        this.openEndedEvaluationService = openEndedEvaluationService;
     }
 
     @Override
@@ -88,7 +92,7 @@ public class TestAttemptService implements TestAttemptServiceInterface {
                 .collect(Collectors.groupingBy(r -> r.getQuestion().getQuestionType()));
         float totalPointsFromChoiceResponses = processChoiceScoring(groupedByType);
         finalizeTestAttemptSubmission(testAttempt, totalPointsFromChoiceResponses);
-        simulateOpenEndedEvaluation(groupedByType);
+        performOpenEndedResponseEvaluation(testAttempt, groupedByType);
     }
 
     private TestAttempt validateAndAuthorizeTestAttempt(Long testAttemptId, String studentEmail) {
@@ -189,9 +193,13 @@ public class TestAttemptService implements TestAttemptServiceInterface {
         testAttemptRepository.save(testAttempt);
     }
 
-    private void simulateOpenEndedEvaluation(Map<QuestionType, List<Response>> groupedByType) {
+    private void performOpenEndedResponseEvaluation(TestAttempt testAttempt, Map<QuestionType, List<Response>> groupedByType) {
         List<Response> openEndedResponses = groupedByType.getOrDefault(QuestionType.OPEN_ENDED, List.of());
-        System.out.println("Not yet implemented");
+        if (openEndedResponses.isEmpty()) {
+            testAttempt.setStatus(TestAttemptStatus.GRADED);
+            testAttemptRepository.save(testAttempt);
+        }
+        openEndedEvaluationService.evaluateOpenEndedResponses(openEndedResponses);
     }
 
     private List<TestAttemptQuestionDto> constructListOfQuestionsInTest(Long testId) {
