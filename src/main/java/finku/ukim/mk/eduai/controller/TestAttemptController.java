@@ -1,6 +1,7 @@
 package finku.ukim.mk.eduai.controller;
 
 import finku.ukim.mk.eduai.dto.StartTestResponseDto;
+import finku.ukim.mk.eduai.dto.SubmitTestAttemptRequestDto;
 import finku.ukim.mk.eduai.service.impl.TestAttemptService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,5 +22,13 @@ public class TestAttemptController {
             @PathVariable Long testId,
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(testAttemptService.startTestAttempt(testId, userDetails.getUsername()));
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity<String> submitTestAttempt(
+            @RequestBody SubmitTestAttemptRequestDto submitTestAttemptRequestDto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        testAttemptService.submitTestAttempt(submitTestAttemptRequestDto, userDetails.getUsername());
+        return ResponseEntity.ok("Test submitted successfully!");
     }
 }

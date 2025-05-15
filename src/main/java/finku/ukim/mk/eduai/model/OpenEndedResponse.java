@@ -23,4 +23,9 @@ public class OpenEndedResponse {
 
     @Column(name = "answer_text")
     private String answerText;
+
+    public OpenEndedResponse(Response response, String answerText) {
+        this.response = response;
+        this.answerText = answerText;
+    }
 }
