@@ -44,21 +44,21 @@ public class AiService implements AIServiceInterface {
     }
 
     private static HttpEntity<Map<String, Object>> getMapHttpEntity(String question, String answer, Float maximumPoints, HttpHeaders headers) {
-        String prompt = "Question: " + question + "\nStudent Answer: " + answer;
-
-        Map<String, Object> systemMsg = Map.of(
-                "role", "system",
-                "content", "You are an AI that evaluates student answers. Rate the answer from 1 to " + maximumPoints + ", and if it is incorrect or partially correct, explain in 3-4 sentences why. Return the score and explanation only."
-        );
-
-        Map<String, Object> userMsg = Map.of(
-                "role", "user",
-                "content", prompt
+        String prompt = String.format(
+                "Question: %s\nStudent Answer: %s\n\n" +
+                        "You must evaluate the student's answer on a scale from 0 to %.2f points. " +
+                        "Respond ONLY with a JSON object in the following format:\n" +
+                        "{ \"score\": number, \"explanation\": \"...\" }\n" +
+                        "Do not include any other text or formatting. Be concise and strict.",
+                question, answer, maximumPoints
         );
 
         Map<String, Object> body = Map.of(
                 "model", "accounts/fireworks/models/llama4-scout-instruct-basic",
-                "messages", List.of(systemMsg, userMsg)
+                "messages", List.of(
+                        Map.of("role", "system", "content", "You are an AI assistant that grades student answers strictly."),
+                        Map.of("role", "user", "content", prompt)
+                )
         );
 
         return new HttpEntity<>(body, headers);

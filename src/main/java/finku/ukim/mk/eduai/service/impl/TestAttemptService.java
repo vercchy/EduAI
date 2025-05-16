@@ -68,6 +68,7 @@ public class TestAttemptService implements TestAttemptServiceInterface {
                 .test(test)
                 .student(access.getStudent())
                 .status(TestAttemptStatus.IN_PROGRESS)
+                .totalScore(0f)
                 .submissionDate(null)
                 .build();
         testAttempt = testAttemptRepository.save(testAttempt);
@@ -92,6 +93,7 @@ public class TestAttemptService implements TestAttemptServiceInterface {
                 .collect(Collectors.groupingBy(r -> r.getQuestion().getQuestionType()));
         float totalPointsFromChoiceResponses = processChoiceScoring(groupedByType);
         finalizeTestAttemptSubmission(testAttempt, totalPointsFromChoiceResponses);
+        flushAndDetachPersistenceContext();
         performOpenEndedResponseEvaluation(testAttempt, groupedByType);
     }
 
@@ -140,6 +142,7 @@ public class TestAttemptService implements TestAttemptServiceInterface {
         float totalPoints = 0;
         for (Response response : choiceResponses) {
             List<ChoiceResponseAnswer> selectedAnswers = validateChoiceResponseAndExtractGivenAnswers(response);
+            if (selectedAnswers.isEmpty()) continue;
             Question question = response.getQuestion();
             float questionMaxPoints = question.getMaxPoints();
 
@@ -198,6 +201,7 @@ public class TestAttemptService implements TestAttemptServiceInterface {
         if (openEndedResponses.isEmpty()) {
             testAttempt.setStatus(TestAttemptStatus.GRADED);
             testAttemptRepository.save(testAttempt);
+            return;
         }
         openEndedEvaluationService.evaluateOpenEndedResponses(openEndedResponses);
     }
@@ -213,5 +217,12 @@ public class TestAttemptService implements TestAttemptServiceInterface {
     private List<TestAttemptAnswerDto> constructListOfAnswersForQuestion(Long questionId) {
         List<Answer> allAnswersForQuestion = answerRepository.findAllByQuestionId(questionId);
         return allAnswersForQuestion.stream().map(a -> new TestAttemptAnswerDto(a.getId(), a.getAnswerText())).toList();
+    }
+
+    private void flushAndDetachPersistenceContext(){
+        responseRepository.flush();
+        choiceResponseRepository.flush();
+        choiceResponseAnswerRepository.flush();
+        openEndedResponseRepository.flush();
     }
 }

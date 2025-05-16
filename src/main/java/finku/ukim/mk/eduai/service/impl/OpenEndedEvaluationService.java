@@ -1,5 +1,7 @@
 package finku.ukim.mk.eduai.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import finku.ukim.mk.eduai.dto.AIEvaluationResponseDto;
 import finku.ukim.mk.eduai.exception.ResourceNotFoundException;
 import finku.ukim.mk.eduai.model.*;
 import finku.ukim.mk.eduai.repository.EvaluationRepository;
@@ -21,18 +23,21 @@ public class OpenEndedEvaluationService implements OpenEndedEvaluationServiceInt
     private final EvaluationRepository evaluationRepository;
     private final AIServiceInterface aiService;
     private final TestAttemptRepository testAttemptRepository;
+    private final ObjectMapper objectMapper;
 
     public OpenEndedEvaluationService(
             ResponseRepository responseRepository,
             EvaluationRepository evaluationRepository,
             OpenEndedResponseRepository openEndedResponseRepository,
-            AIServiceInterface aiService, TestAttemptRepository testAttemptRepository
+            AIServiceInterface aiService, TestAttemptRepository testAttemptRepository,
+            ObjectMapper objectMapper
     ) {
         this.responseRepository = responseRepository;
         this.evaluationRepository = evaluationRepository;
         this.openEndedResponseRepository = openEndedResponseRepository;
         this.aiService = aiService;
         this.testAttemptRepository = testAttemptRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -42,20 +47,23 @@ public class OpenEndedEvaluationService implements OpenEndedEvaluationServiceInt
         float totalAIScore = 0f;
 
         for (Response response : responses) {
-            OpenEndedResponse openEnded = openEndedResponseRepository.findById(response.getId())
+            OpenEndedResponse openEnded = openEndedResponseRepository.findByResponseId(response.getId())
                     .orElseThrow(() -> new ResourceNotFoundException("OpenEndedResponse not found"));
+
+            String answerText = openEnded.getAnswerText();
+            if (answerText == null || answerText.isEmpty()) continue;
 
             String questionText = response.getQuestion().getQuestionText();
             float maxPoints = response.getQuestion().getMaxPoints();
-            String aiResult = aiService.evaluateStudentAnswer(questionText, openEnded.getAnswerText(), maxPoints);
+            String aiResult = aiService.evaluateStudentAnswer(questionText, answerText, maxPoints);
 
-            float score = extractScore(aiResult);
-            String comment = extractExplanation(aiResult);
+            AIEvaluationResponseDto aiEvaluationResponseDto = parseEvaluationJson(aiResult);
+            float score = aiEvaluationResponseDto.getScore();
 
             Evaluation evaluation = Evaluation.builder()
                     .openEndedResponse(openEnded)
                     .score(score)
-                    .comment(comment)
+                    .comment(aiEvaluationResponseDto.getExplanation())
                     .isAIGenerated(true)
                     .build();
 
@@ -65,29 +73,19 @@ public class OpenEndedEvaluationService implements OpenEndedEvaluationServiceInt
             evaluationRepository.save(evaluation);
         }
 
-        if (!responses.isEmpty()) {
-            TestAttempt attempt = responses.get(0).getTestAttempt();
-            float existingScore = attempt.getTotalScore();
-            attempt.setTotalScore(existingScore + totalAIScore);
-            attempt.setStatus(TestAttemptStatus.GRADED);
-            testAttemptRepository.save(attempt);
-        }
+        TestAttempt attempt = responses.get(0).getTestAttempt();
+        float existingScore = attempt.getTotalScore();
+        attempt.setTotalScore(existingScore + totalAIScore);
+        attempt.setStatus(TestAttemptStatus.GRADED);
+        testAttemptRepository.save(attempt);
+
     }
 
-    private float extractScore(String jsonString) {
+    private AIEvaluationResponseDto parseEvaluationJson(String jsonString) {
         try {
-            String num = jsonString.split("\"score\"\\s*:\\s*")[1].split("[,}]")[0];
-            return Float.parseFloat(num);
+            return objectMapper.readValue(jsonString, AIEvaluationResponseDto.class);
         } catch (Exception e) {
-            return 0f;
-        }
-    }
-
-    private String extractExplanation(String jsonString) {
-        try {
-            return jsonString.split("\"explanation\"\\s*:\\s*\"")[1].split("\"")[0];
-        } catch (Exception e) {
-            return "Could not parse explanation.";
+            return new AIEvaluationResponseDto(0f, "Could not parse response properly");
         }
     }
 }
