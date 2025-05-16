@@ -152,6 +152,12 @@ function App() {
 //         <App />
 //     </React.StrictMode>
 // );
+
+const token = localStorage.getItem('token');
+if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
 export const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
@@ -165,7 +171,7 @@ root.render(
                 <Route path="/TestInProgress" element={<TestInProgress/>} />
                 <Route path="/teacher" element={<Teacher/>} />
                 <Route path="/add-subject" element={<AddSubject/>} />
-                <Route path="/subject" element={<Subject/>} />
+                <Route path="/subject/:id" element={<Subject/>} />
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>

@@ -1,6 +1,6 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
 
-import React from 'react';
+import { useNavigate } from 'react-router-dom';import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from '../reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,6 +13,7 @@ import zhurka_slika from '../assets/zhurkaaa.svg';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { root } from "../index"
+import axios from "axios";
 
 
 
@@ -23,62 +24,66 @@ import { root } from "../index"
 reportWebVitals();
 
 function Teacher() {
+    const [subjects, setSubjects] = useState([]);
+    const studentId = 1; // Replace with actual logged-in student's ID (e.g., from auth context)
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get('http://localhost:9090/api/subjects/teacher', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(res => {
+            setSubjects(res.data);
+        }).catch(err => {
+            console.error("Error fetching student subjects:", err);
+        });
+    }, []);
+
     return (
         <>
-            <Navbar/>
+            <Navbar />
             <div>
                 <div className="px-4 mb-2">
-                    <button className="btn btn-danger">Add a new course</button>
+                    <button className="btn btn-danger" onClick={() => navigate("/add-subject")}>Add a new course</button>
                 </div>
-                <div className="h2 px-4 mb-2">Your Courses </div>
-                <div className="h6 px-4 mb-2">Mobile App Development</div>
-                <div className="d-flex justify-content-between align-items-center px-4 mb-5">
-                    <div className="me-3">
-                        <p className="mb-0">
-                            Dive into the world of mobile app development. Learn to build native iOS and Android applications using industry-leading frameworks like Swift and Kotlin.
-                        </p>
-                    </div>
-                    <div>
-                        <button className="btn btn-dark">View Course</button>
-                    </div>
-                </div>
-                <div>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col">
-                                <img src={grid1} alt="EduAI Logo" width="300" height="300"/>
+
+                <div className="h2 px-4 mb-4">Your Courses</div>
+
+                {subjects.map(subject => (
+                    <div key={subject.id} className="subject-card mb-5 px-4">
+                        <div className="h6 mb-2">{subject.name}</div>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <div className="me-3">
+                                <p className="mb-0">{subject.description}</p>
                             </div>
-                            <div className="col">
-                                <img src={grid2} alt="EduAI Logo" width="300" height="300"/>
+                            <div>
+                                <button className="btn btn-dark">View Course</button>
                             </div>
-                            <div className="col">
-                                <img src={grid3} alt="EduAI Logo" width="300" height="300"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-center px-4 mb-5">
-                        {/* Left side with two paragraphs */}
-                        <div>
-                            <p className="mb-1">8 Weeks</p>
                         </div>
 
-                        {/* Right side with one paragraph */}
-                        <div>
-                            <p className="mb-0">By Ivan Ristovski</p>
+                        <div className="container mt-3">
+                            <div className="row">
+                                <div className="col"><img src={grid1} alt="EduAI Grid" width="300" height="300" /></div>
+                                <div className="col"><img src={grid2} alt="EduAI Grid" width="300" height="300" /></div>
+                                <div className="col"><img src={grid3} alt="EduAI Grid" width="300" height="300" /></div>
+                            </div>
+                        </div>
+
+                        <div className="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <p className="mb-0">
+                                    By {subject.professorFullName}
+                                </p>
+                            </div>
                         </div>
                     </div>
-
-                </div>
+                ))}
             </div>
-
-
-            <Footer/>
+            <Footer />
         </>
     );
 }
 
-
-
 export default Teacher;
-
-

@@ -14,6 +14,7 @@ public class SecurityUtils {
         if (authentication == null || authentication.getAuthorities().isEmpty()) {
             return null;
         }
+
         return authentication.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
     }
 }
