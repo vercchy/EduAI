@@ -1,12 +1,10 @@
 package finku.ukim.mk.eduai.service.impl;
 
 import finku.ukim.mk.eduai.dto.*;
-import finku.ukim.mk.eduai.exception.ForbiddenOperationException;
-import finku.ukim.mk.eduai.exception.InvalidDataException;
-import finku.ukim.mk.eduai.exception.ResourceNotFoundException;
-import finku.ukim.mk.eduai.exception.UnauthorizedActionException;
+import finku.ukim.mk.eduai.exception.*;
 import finku.ukim.mk.eduai.model.*;
 import finku.ukim.mk.eduai.repository.*;
+import finku.ukim.mk.eduai.service.helper.TestAttemptReviewBuilder;
 import finku.ukim.mk.eduai.service.interfaces.OpenEndedEvaluationServiceInterface;
 import finku.ukim.mk.eduai.service.interfaces.TestAttemptServiceInterface;
 import jakarta.transaction.Transactional;
@@ -31,6 +29,8 @@ public class TestAttemptService implements TestAttemptServiceInterface {
     private final ChoiceResponseRepository choiceResponseRepository;
     private final ChoiceResponseAnswerRepository choiceResponseAnswerRepository;
     private final OpenEndedEvaluationServiceInterface openEndedEvaluationService;
+    private final UserRepository userRepository;
+    private final TestAttemptReviewBuilder testAttemptReviewBuilder;
 
     public TestAttemptService(
             TestRepository testRepository,
@@ -42,7 +42,9 @@ public class TestAttemptService implements TestAttemptServiceInterface {
             OpenEndedResponseRepository openEndedResponseRepository,
             ChoiceResponseRepository choiceResponseRepository,
             ChoiceResponseAnswerRepository choiceResponseAnswerRepository,
-            OpenEndedEvaluationServiceInterface openEndedEvaluationService
+            OpenEndedEvaluationServiceInterface openEndedEvaluationService,
+            UserRepository userRepository,
+            TestAttemptReviewBuilder testAttemptReviewBuilder
     ) {
         this.testRepository = testRepository;
         this.studentSubjectAccessRepository = studentSubjectAccessRepository;
@@ -54,6 +56,20 @@ public class TestAttemptService implements TestAttemptServiceInterface {
         this.choiceResponseRepository = choiceResponseRepository;
         this.choiceResponseAnswerRepository = choiceResponseAnswerRepository;
         this.openEndedEvaluationService = openEndedEvaluationService;
+        this.userRepository = userRepository;
+        this.testAttemptReviewBuilder = testAttemptReviewBuilder;
+    }
+
+    @Override
+    public TestAttemptBasicInfoDto getTestAttemptBasicInfo(Long testAttemptId, String studentEmail) {
+        TestAttempt testAttempt = validateTestAttemptAndStudentIsAuthorized(testAttemptId, studentEmail);
+        return new TestAttemptBasicInfoDto(testAttempt);
+    }
+
+    @Override
+    public TestAttemptReviewDto reviewTestAttempt(Long testAttemptId, String email) {
+        TestAttempt testAttempt = checkAuthorizationAndExtractTestAttemptBasedOnRole(testAttemptId, email);
+        return testAttemptReviewBuilder.buildTestAttemptReviewDto(testAttempt);
     }
 
     @Override
@@ -79,7 +95,8 @@ public class TestAttemptService implements TestAttemptServiceInterface {
     @Override
     @Transactional
     public void submitTestAttempt(SubmitTestAttemptRequestDto submitTestAttemptRequestDto, String studentEmail) {
-        TestAttempt testAttempt = validateAndAuthorizeTestAttempt(submitTestAttemptRequestDto.getTestAttemptId(), studentEmail);
+        TestAttempt testAttempt = validateTestAttemptAndStudentIsAuthorized(submitTestAttemptRequestDto.getTestAttemptId(), studentEmail);
+        validateTestAttemptStatus(testAttempt.getStatus());
         List<Response> savedResponses = new ArrayList<>();
         submitTestAttemptRequestDto.getResponses().forEach(response -> {
             Question question = questionRepository.findById(response.getQuestionId())
@@ -97,13 +114,38 @@ public class TestAttemptService implements TestAttemptServiceInterface {
         performOpenEndedResponseEvaluation(testAttempt, groupedByType);
     }
 
-    private TestAttempt validateAndAuthorizeTestAttempt(Long testAttemptId, String studentEmail) {
-       TestAttempt testAttempt = testAttemptRepository.findById(testAttemptId)
-                .orElseThrow(() -> new ResourceNotFoundException("TestAttempt not found"));
+    private TestAttempt checkAuthorizationAndExtractTestAttemptBasedOnRole(Long testAttemptId, String email) {
+        TestAttempt testAttempt;
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        switch (user.getRole()) {
+            case STUDENT ->
+                    testAttempt = validateTestAttemptAndStudentIsAuthorized(testAttemptId, email);
+            case PROFESSOR ->
+                    testAttempt = validateTestAttemptAndTeacherIsAuthorized(testAttemptId, email);
+            default ->
+                    throw new InvalidRoleException("Invalid user role");
+        }
+        return testAttempt;
+    }
+
+    private TestAttempt validateTestAttemptAndStudentIsAuthorized(Long testAttemptId, String studentEmail) {
+        TestAttempt testAttempt = validateTestAttemptExists(testAttemptId);
         if (!testAttempt.getStudent().getUser().getEmail().equals(studentEmail))
             throw new UnauthorizedActionException("Unauthorized action");
-        validateTestAttemptStatus(testAttempt.getStatus());
         return testAttempt;
+    }
+
+    private TestAttempt validateTestAttemptAndTeacherIsAuthorized(Long testAttemptId, String teacherEmail) {
+        TestAttempt testAttempt = validateTestAttemptExists(testAttemptId);
+        if (!testAttempt.getTest().getSubject().getTeacher().getUser().getEmail().equals(teacherEmail))
+            throw new UnauthorizedActionException("Unauthorized action");
+        return testAttempt;
+    }
+
+    private TestAttempt validateTestAttemptExists(Long testAttemptId) {
+        return testAttemptRepository.findById(testAttemptId)
+                .orElseThrow(() -> new ResourceNotFoundException("TestAttempt not found"));
     }
 
     private void validateTestAttemptStatus(TestAttemptStatus testAttemptStatus) {
