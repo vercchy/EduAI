@@ -7,7 +7,6 @@ import lombok.*;
 @Table(name = "evaluations")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Evaluation {
@@ -26,4 +25,10 @@ public class Evaluation {
     @OneToOne
     @JoinColumn(name = "open_ended_response_id", nullable = false)
     private OpenEndedResponse openEndedResponse;
+
+    public Evaluation() {
+        this.comment = "";
+        this.score = 0f;
+        this.isAIGenerated = false;
+    }
 }
