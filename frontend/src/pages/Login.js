@@ -1,17 +1,14 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
-import ReactDOM from 'react-dom/client';
 import reportWebVitals from '../reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import logo from '../assets/eduAI_logo.svg';
-import zhurka_slika from '../assets/zhurkaaa.svg';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { root } from "../index"
 import {useNavigate} from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 
 
 // If you want to start measuring performance in your app, pass a function
@@ -49,12 +46,15 @@ function Login() {
             });
 
             // Assuming the response contains the token
-            localStorage.setItem('token', response.data.token); // Store token in localStorage
+            const token = response.data.token;
+            localStorage.setItem('token', token); // Store token in localStorage
+            const decoded = jwtDecode(token);
+            localStorage.setItem('role', decoded.role);
 
             setSuccess('Login successful!'); // You can use this to show a success message
 
             // Redirect the user to the dashboard or another protected route
-            navigate('/student');
+            navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data || 'Login failed');
         }

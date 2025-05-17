@@ -11,5 +11,6 @@ public class SubjectBasicInfoDto {
     private Long id;
     private String name;
     private String professorFullName;
+    private String description;
 }
 

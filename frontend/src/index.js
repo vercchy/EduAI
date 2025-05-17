@@ -1,23 +1,21 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom/client';
-import {Routes, Route, BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Login from './pages/Login';
-import Student from "./pages/student";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-import logo from './assets/eduAI_logo.svg';
 import zhurka_slika from './assets/zhurkaaa.svg';
 import UpcomingTestsPage from "./pages/UpcomingTestsPage";
 import TakenTestsPage from "./pages/TakenTestsPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import TestInProgress from "./pages/TestInProgress";
-import Teacher from "./pages/teacher";
 import AddSubject from "./pages/add-subject";
 import Subject from "./pages/subject";
+import UserDashboard from './pages/UserDashboard';
 
 
 // If you want to start measuring performance in your app, pass a function
@@ -159,11 +157,10 @@ root.render(
             <Routes>
                 <Route path="/home" element={<App />} />
                 <Route path="/login" element={<Login/>} />
-                <Route path="/student" element={<Student/>} />
+                <Route path="/dashboard" element={<UserDashboard />} />
                 <Route path="/upcoming-tests" element={<UpcomingTestsPage/>} />
                 <Route path="/taken-tests" element={<TakenTestsPage/>} />
                 <Route path="/TestInProgress" element={<TestInProgress/>} />
-                <Route path="/teacher" element={<Teacher/>} />
                 <Route path="/add-subject" element={<AddSubject/>} />
                 <Route path="/subject" element={<Subject/>} />
                 {/* Add other routes here, e.g. Home */}
