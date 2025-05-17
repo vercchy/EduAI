@@ -27,6 +27,8 @@ public class SubjectService implements SubjectServiceInterface {
     @Override
     public List<SubjectBasicInfoDto> getSubjectsByRole(String email, String role) {
         List<Subject> subjects;
+        System.out.println("getSubjectsByRole called with email: " + email + ", role: " + role); //raboti so ovoj line, ne raboti bez (pojma nemam kako neka stoi)
+
 
         switch (role) {
             case "PROFESSOR" -> subjects = subjectRepository.findAllByTeacherUserEmail(email);
@@ -113,4 +115,5 @@ public class SubjectService implements SubjectServiceInterface {
                 .build();
         studentSubjectAccessRepository.save(access);
     }
+
 }

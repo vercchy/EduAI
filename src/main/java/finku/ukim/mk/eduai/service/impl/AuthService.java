@@ -101,7 +101,7 @@ public class AuthService implements AuthServiceInterface {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getEmail());
         String roleName = userDetails.getAuthorities().iterator().next().getAuthority();
 
-        return new LoginResponse(jwtUtil.generateToken(userDetails.getUsername(), roleName));
+        return new LoginResponse(jwtUtil.generateToken(userDetails.getUsername(), roleName, request.getEmail()));
     }
 
     private boolean isPasswordStrong(String password) {
