@@ -29,4 +29,8 @@ public class Question {
     @ManyToOne
     @JoinColumn(name = "test_id", nullable = false)
     private Test test;
+
+    public String getText(){
+        return questionText;
+    }
 }
