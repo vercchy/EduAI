@@ -14,7 +14,7 @@ function Navbar() {
             <div className="collapse navbar-collapse" id="navbarContent">
                 <ul className="navbar-nav ms-4">
                     <li className="nav-item"><a className="nav-link" href="/home">Home</a></li>
-                    <li className="nav-item"><a className="nav-link" href="#">Courses</a></li>
+                    <li className="nav-item"><a className="nav-link" href="/dashboard">Courses</a></li>
                     <li className="nav-item"><a className="nav-link" href="/upcoming-tests">Upcoming Tests</a></li>
                     <li className="nav-item"><a className="nav-link" href="/taken-tests">Taken Tests</a></li>
                     <li className="nav-item"><a className="nav-link" href="#">About Us</a></li>

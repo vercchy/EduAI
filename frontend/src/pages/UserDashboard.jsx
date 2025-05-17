@@ -4,21 +4,19 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
+import { useNavigate } from 'react-router-dom';
 
 function UserDashboard() {
     const [subjects, setSubjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [role, setRole] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         const headers = { Authorization: `Bearer ${token}` }
-        api.get('/api/subjects', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        api.get('/api/subjects')
             .then(response => {
                 setSubjects(response.data);
                 setLoading(false);
@@ -56,7 +54,11 @@ function UserDashboard() {
                                     <p className="card-text">
                                         {subject.description}
                                     </p>
-                                    <button className="btn btn-dark">View Course</button>
+                                    <button
+                                        className="btn btn-dark"
+                                        onClick={() => navigate('/course-details', { state: { subjectId: subject.id } })}>
+                                        View Course
+                                    </button>
                                 </div>
                             </div>
                         </div>

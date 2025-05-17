@@ -14,7 +14,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import TestInProgress from "./pages/TestInProgress";
 import AddSubject from "./pages/add-subject";
-import Subject from "./pages/subject";
+import Subject from "./pages/Subject";
 import UserDashboard from './pages/UserDashboard';
 
 
@@ -164,11 +164,11 @@ root.render(
                 <Route path="/home" element={<App />} />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/course-details" element={<Subject/>} />
                 <Route path="/upcoming-tests" element={<UpcomingTestsPage/>} />
                 <Route path="/taken-tests" element={<TakenTestsPage/>} />
                 <Route path="/TestInProgress" element={<TestInProgress/>} />
                 <Route path="/add-subject" element={<AddSubject/>} />
-                <Route path="/subject/:id" element={<Subject/>} />
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>
