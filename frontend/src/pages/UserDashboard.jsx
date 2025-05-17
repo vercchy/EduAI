@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/axios';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 import { useNavigate } from 'react-router-dom';
@@ -32,12 +30,10 @@ function UserDashboard() {
             });
     }, []);
 
-    const headingText = role === 'ROLE_PROFESSOR' ? 'Created Courses' : 'Enrolled Courses';
+    const headingText = role === 'ROLE_PROFESSOR' ? 'Created Subjects' : 'Enrolled Subjects';
 
     return (
         <>
-            <Navbar/>
-
             <div className="container-fluid">
                 <div className="h2 px-4 mb-4">{headingText}</div>
 
@@ -65,8 +61,6 @@ function UserDashboard() {
                     ))}
                 </div>
             </div>
-
-            <Footer/>
         </>
     );
 }

@@ -1,26 +1,13 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
 
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import axios from 'axios';
+import React, {useState} from 'react';
+import api from "../api/axios";
 import reportWebVitals from '../reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import logo from '../assets/eduAI_logo.svg';
-import grid1 from '../assets/grid1.png';
-import grid2 from '../assets/grid2.png';
-import grid3 from '../assets/grid3.png';
-import zhurka_slika from '../assets/zhurkaaa.svg';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { root } from "../index"
 
-
-
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
 function AddSubject() {
@@ -54,7 +41,7 @@ function AddSubject() {
 
             const token = localStorage.getItem('token');
 
-            const response = await axios.post('http://localhost:9090/api/subjects', formData, {
+            const response = await api.post('/api/subjects', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

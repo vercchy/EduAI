@@ -57,10 +57,11 @@ function Subject() {
                 <p><strong>Difficulty:</strong> {subjectDetails.difficultyLevel}</p>
                 <p><strong>Created At:</strong> {new Date(subjectDetails.createdAt).toLocaleString()}</p>
                 <p><strong>Professor:</strong> {subjectDetails.teacherDto.user.firstName} {subjectDetails.teacherDto.user.lastName} ({subjectDetails.teacherDto.user.email})</p>
-
-                <hr />
                 {isProfessor &&
                     <>
+                <button className={"btn btn-dark"}>Create Test</button>
+
+                <hr />
                 <h4>Assign Student</h4>
                 <input
                     type="email"
@@ -72,11 +73,10 @@ function Subject() {
                 <button className="btn btn-primary" onClick={handleAssign}>
                     Add student to subject
                 </button>
-                    </>
-                }
-
                 {message && <p className="mt-2 text-info">{message}</p>}
                 <hr />
+                    </>
+                }
 
                 <h4>Assigned Students</h4>
                 {subjectDetails.students.length === 0 ? (

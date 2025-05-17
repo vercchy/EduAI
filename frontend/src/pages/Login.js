@@ -1,14 +1,14 @@
 // TODO: Dodaj slikicki mali za footerot (telefon,email,etc)
 
 import React, {useState} from 'react';
-import axios from 'axios';
+import api from "../api/axios";
 import reportWebVitals from '../reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {useNavigate} from "react-router-dom";
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
 
 // If you want to start measuring performance in your app, pass a function
@@ -40,7 +40,7 @@ function Login() {
         setSuccess('');
 
         try {
-            const response = await axios.post('http://localhost:9090/auth/login', {
+            const response = await api.post('/auth/login', {
                 email: formData.email,
                 password: formData.password
             });
@@ -53,8 +53,7 @@ function Login() {
 
             setSuccess('Login successful!'); // You can use this to show a success message
 
-            // Redirect the user to the dashboard or another protected route
-            navigate('/dashboard');
+            navigate('/home');
         } catch (err) {
             setError(err.response?.data || 'Login failed');
         }
