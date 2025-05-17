@@ -2,6 +2,7 @@ import React from 'react';
 import logo from '../assets/eduAI_logo.svg';
 
 function Navbar() {
+    const token = localStorage.getItem('token');
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
             <a className="navbar-brand" href="/home">
@@ -19,10 +20,12 @@ function Navbar() {
                     <li className="nav-item"><a className="nav-link" href="#">About Us</a></li>
                     <li className="nav-item"><a className="nav-link" href="#">Contact</a></li>
                 </ul>
-                <div className="ms-auto">
-                    <a className="btn btn-custom-color text-white ms-2" href="/home">Sign Up</a>
-                    <a className="btn btn-custom-color text-white ms-2" href="/login">Login</a>
-                </div>
+                {!token && (
+                    <div className="ms-auto">
+                        <a className="btn btn-custom-color text-white ms-2" href="/home">Sign Up</a>
+                        <a className="btn btn-custom-color text-white ms-2" href="/login">Login</a>
+                    </div>
+                )}
             </div>
         </nav>
     );

@@ -44,7 +44,8 @@ public class SubjectService implements SubjectServiceInterface {
                     return new SubjectBasicInfoDto(
                             subject.getId(),
                             subject.getName(),
-                            professor.getFullName());
+                            professor.getFullName(),
+                            subject.getDescription());
                 })
                 .toList();
     }
