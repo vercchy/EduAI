@@ -44,7 +44,7 @@ root.render(
                 <Route path="/login" element={<Login/>} />
                 <Route path="/dashboard" element={<UserDashboard />} />
                 <Route path="/course-details" element={<Subject/>} />
-                <Route path="/upcoming-tests" element={<UpcomingTestsPage/>} />
+                <Route path="/tests-for-subject" element={<UpcomingTestsPage/>} />
                 <Route path="/taken-tests" element={<TakenTestsPage/>} />
                 <Route path="/TestInProgress" element={<TestInProgress/>} />
                 <Route path="/add-subject" element={<AddSubject/>} />

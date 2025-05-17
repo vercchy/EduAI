@@ -6,7 +6,6 @@ function Navbar() {
     const isUserLoggedIn = Auth.isUserLoggedIn();
     const isProfessor = Auth.isProfessor();
     const homeTabTitle = isUserLoggedIn ? 'Subjects' : 'Home';
-    const testsTabTitle = isProfessor ? 'My Created Tests' : 'Assigned Tests';
     const takenTestsTabTitle = isProfessor ? 'Student Submissions' : 'Taken Tests';
 
     return (
@@ -22,9 +21,6 @@ function Navbar() {
                     <li className="nav-item"><a className="nav-link" href="/home">{homeTabTitle}</a></li>
                     {isUserLoggedIn && (
                         <>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/upcoming-tests">{testsTabTitle}</a>
-                            </li>
                             <li className="nav-item">
                                 <a className="nav-link" href="/taken-tests">{takenTestsTabTitle}</a>
                             </li>

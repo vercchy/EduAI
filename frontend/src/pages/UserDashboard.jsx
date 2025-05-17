@@ -50,11 +50,18 @@ function UserDashboard() {
                                     <p className="card-text">
                                         {subject.description}
                                     </p>
-                                    <button
-                                        className="btn btn-dark"
-                                        onClick={() => navigate('/course-details', { state: { subjectId: subject.id } })}>
-                                        View Course
-                                    </button>
+                                    <div className="d-flex gap-3">
+                                        <button
+                                            className="btn btn-dark"
+                                            onClick={() => navigate('/course-details', { state: { subjectId: subject.id } })}>
+                                            View Course
+                                        </button>
+                                        <button
+                                            className="btn btn-dark"
+                                            onClick={() => navigate('/tests-for-subject', { state: { subjectId: subject.id, subjectName: subject.name } })}>
+                                            View Tests
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
