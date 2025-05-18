@@ -113,6 +113,11 @@ public class TestService implements TestServiceInterface {
         }
     }
 
+    @Override
+    public List<Test> getTestsForSubject(Long subjectId) {
+        return testRepository.findBySubjectId(subjectId);
+    }
+
     private Test createTestForSubject(BasicTestCreationInfoDto basicTestInfo, Subject subject) {
         return Test.builder()
                 .title(basicTestInfo.getTitle())
