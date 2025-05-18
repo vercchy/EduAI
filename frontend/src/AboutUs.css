@@ -1,0 +1,79 @@
+.about-container {
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
+    padding: 60px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.about-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #0077b6;
+}
+
+.about-subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 50px;
+}
+
+.about-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+@media (min-width: 768px) {
+    .about-sections {
+        flex-direction: row;
+    }
+}
+
+.about-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    flex: 1;
+    text-align: left;
+}
+
+.about-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #023e8a;
+}
+
+.about-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.about-tech {
+    margin-top: 60px;
+}
+
+.about-tech h2 {
+    font-size: 1.3rem;
+    color: #0077b6;
+    margin-bottom: 10px;
+}
+
+.about-tech p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.about-footer {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: #888;
+}

@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import api from "../api/axios";
-import { useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
+
 
 function CreateTest() {
     const location = useLocation();
     const subjectId = location.state?.subjectId;
+    const subjectName = location.state?.subjectName;
 
     const [testInfo, setTestInfo] = useState({
         title: '',
@@ -26,6 +30,15 @@ function CreateTest() {
         multiple: 1,
         essay: 2
     };
+    const passedSubjectId = location.state?.subjectId;
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (passedSubjectId) {
+            setTestInfo(prev => ({ ...prev, subjectId: passedSubjectId }));
+        }
+    }, [passedSubjectId]);
 
     const handleTestInfoChange = (e) => {
         const { name, value } = e.target;
@@ -105,7 +118,6 @@ function CreateTest() {
     };
 
     const handleSubmit = async () => {
-        const token = localStorage.getItem("token");
 
         const formattedQuestions = questions.map(q => ({
             questionText: q.text,
@@ -143,7 +155,13 @@ function CreateTest() {
                 duration: '',
                 maxPoints: ''
             });
-            setQuestions([]);
+
+            navigate('/tests-for-subject', {
+                state: {
+                    subjectId: subjectId,
+                    subjectName: subjectName
+                }
+            });
         } catch (err) {
             console.error('Error submitting test:', err.response?.data || err.message);
         }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import api from "../api/axios";
 import reportWebVitals from '../reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,6 +11,7 @@ import TestForm from "../components/TestInProgress/TestForm";
 reportWebVitals();
 
 function TestInProgress() {
+    const testFormRef = useRef(null);
     const location = useLocation();
     const testId = location.state?.testId;
     const duration = location.state?.duration;
@@ -45,6 +46,7 @@ function TestInProgress() {
         startTestAttempt();
     }, [testId]);
 
+
     useEffect(() => {
         const timer = setInterval(() => {
             setRemainingTime(prev => (prev > 0 ? prev - 1 : 0));
@@ -52,6 +54,11 @@ function TestInProgress() {
         return () => clearInterval(timer);
     }, []);
 
+    useEffect(() => {
+        if (remainingTime === 0 && testFormRef.current) {
+            testFormRef.current.submitTest();
+        }
+    }, [remainingTime]);
     if (loading) return <p className="text-center mt-5">Loading...</p>;
 
     return (
@@ -72,10 +79,12 @@ function TestInProgress() {
                         </div>
                         <div className="col-md-9">
                             <TestForm
+                                ref={testFormRef}
                                 questions={questions}
                                 testAttemptId={testAttemptId}
                                 subjectName={subjectName}
-                                subjectId={subjectId}/>
+                                subjectId={subjectId}
+                            />
                         </div>
                     </div>
                 )}

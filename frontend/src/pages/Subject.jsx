@@ -11,7 +11,6 @@ function Subject() {
     const navigate = useNavigate();
     const subjectId = location.state?.subjectId;
     const isProfessor = localStorage.getItem('role') === 'ROLE_PROFESSOR';
-    const token = localStorage.getItem('token');
     const [studentEmail, setStudentEmail] = useState("");
     const [message, setMessage] = useState("");
     const [subjectDetails, setSubjectDetails] = useState(null);
@@ -63,13 +62,13 @@ function Subject() {
                         <button
                             className="btn btn-dark"
                             onClick={() => navigate('/create-test', {
-                                state: { subjectId: subjectId }
-                            })}
-                        >
+                                state: { subjectId: subjectId, subjectName: subjectDetails.name }
+                            })}>
                             Create Test
                         </button>
 
-                <hr />
+
+                        <hr />
                 <h4>Assign Student</h4>
                 <input
                     type="email"
