@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
-function TestForm(props) {
-    const { questions, testAttemptId, subjectName, subjectId } = props;
+const TestForm = forwardRef(({ questions, testAttemptId, subjectName, subjectId }, ref) => {
     const navigate = useNavigate();
     const [responses, setResponses] = useState({});
     const [message, setMessage] = useState('');
@@ -48,6 +47,11 @@ function TestForm(props) {
             navigate('/tests-for-subject', { state: { subjectId: subjectId, subjectName: subjectName } })
         }
     };
+
+    useImperativeHandle(ref, () => ({
+        submitTest: handleSubmit
+    }));
+
 
     return (
         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
@@ -114,6 +118,7 @@ function TestForm(props) {
             </div>
         </form>
     );
-}
+});
+
 
 export default TestForm;
