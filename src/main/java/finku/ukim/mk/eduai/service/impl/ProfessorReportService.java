@@ -62,6 +62,7 @@ public class ProfessorReportService implements ProfessorReportServiceInterface {
                 .weakAreas(weakAreas)
                 .scoreTrend(scoreTrend)
                 .hardestQuestion(hardestQuestionDto)
+                .responses(responses)
                 .build();
 
     }

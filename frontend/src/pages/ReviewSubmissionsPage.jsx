@@ -86,9 +86,6 @@ function ReviewSubmissionsPage() {
                         >
                             <i className="bi bi-arrow-left me-1"></i> Back to Tests
                         </button>
-                        <button className="btn btn-outline-primary" onClick={viewJsonReport}>
-                            <i className="bi bi-bar-chart-fill me-1"></i> View Report
-                        </button>
                         <button className="btn btn-outline-danger" onClick={openPdfReportDialog}>
                             <i className="bi bi-file-earmark-pdf me-1"></i> View PDF
                         </button>
