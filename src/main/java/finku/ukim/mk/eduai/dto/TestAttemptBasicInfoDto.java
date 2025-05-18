@@ -18,6 +18,7 @@ public class TestAttemptBasicInfoDto {
     private LocalDateTime submissionDate;
     private String testTitle;
     private int testMaxPoints;
+    private String studentEmail;
 
     public TestAttemptBasicInfoDto(TestAttempt testAttempt) {
         this.id = testAttempt.getId();
@@ -26,5 +27,6 @@ public class TestAttemptBasicInfoDto {
         this.submissionDate = testAttempt.getSubmissionDate();
         this.testTitle = testAttempt.getTest().getTitle();
         this.testMaxPoints = testAttempt.getTest().getMaxPoints();
+        this.studentEmail = testAttempt.getStudent().getUser().getEmail();
     }
 }

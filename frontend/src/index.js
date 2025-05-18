@@ -8,7 +8,6 @@ import Login from './pages/Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import UpcomingTestsPage from "./pages/UpcomingTestsPage";
-import TakenTestsPage from "./pages/TakenTestsPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import TestInProgress from "./pages/TestInProgress";
@@ -16,6 +15,8 @@ import AddSubject from "./pages/add-subject";
 import Subject from "./pages/Subject";
 import UserDashboard from './pages/UserDashboard';
 import RegisterForm from "./pages/Register";
+import ReviewSubmissionsPage from "./pages/ReviewSubmissionsPage";
+import TestAttemptReviewPage from "./pages/TestAttemptReviewPage";
 
 reportWebVitals();
 
@@ -37,7 +38,6 @@ if (token) {
 
 export const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode>
         <BrowserRouter>
             <Routes>
                 <Route path="/home" element={<App />} />
@@ -46,12 +46,12 @@ root.render(
                 <Route path="/course-details" element={<Subject/>} />
                 <Route path="/tests-for-subject" element={<UpcomingTestsPage/>} />
                 <Route path="/take-test" element={<TestInProgress/>} />
-                <Route path="/taken-tests" element={<TakenTestsPage/>} />
+                <Route path="/review-submissions" element={<ReviewSubmissionsPage/>} />
+                <Route path="/review-test-attempt-details" element={<TestAttemptReviewPage/>} />
                 <Route path="/add-subject" element={<AddSubject/>} />
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>
-    </React.StrictMode>
 );
 export default App;
 

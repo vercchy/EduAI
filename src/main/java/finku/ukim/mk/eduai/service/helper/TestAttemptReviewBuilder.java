@@ -50,11 +50,12 @@ public class TestAttemptReviewBuilder {
         QuestionTypeDto questionTypeDto = new QuestionTypeDto(question.getQuestionType());
         String questionText = question.getQuestionText();
         Float earnedScore = response.getScore();
+        Float maximumPoints = question.getMaxPoints();
 
         if (question.getQuestionType() == QuestionType.OPEN_ENDED)
-            return buildTestReviewOpenEndedQuestionDto(responseId, questionTypeDto, questionText, earnedScore);
+            return buildTestReviewOpenEndedQuestionDto(responseId, questionTypeDto, questionText, maximumPoints, earnedScore);
         else
-            return buildTestReviewChoiceQuestionDto(responseId, question.getId(), questionTypeDto, questionText, earnedScore);
+            return buildTestReviewChoiceQuestionDto(responseId, question.getId(), questionTypeDto, questionText, maximumPoints, earnedScore);
     }
 
     private TestReviewChoiceQuestionDto buildTestReviewChoiceQuestionDto(
@@ -62,6 +63,7 @@ public class TestAttemptReviewBuilder {
             Long questionId,
             QuestionTypeDto questionTypeDto,
             String questionText,
+            float maximumPoints,
             float earnedScore) {
         ChoiceResponse choiceResponse = choiceResponseRepository.findByResponseId(responseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Choice response not found"));
@@ -80,6 +82,7 @@ public class TestAttemptReviewBuilder {
         return TestReviewChoiceQuestionDto.builder()
                 .questionText(questionText)
                 .questionTypeDto(questionTypeDto)
+                .maximumPoints(maximumPoints)
                 .earnedScore(earnedScore)
                 .allAnswersForQuestion(allAnswers)
                 .providedAnswerIds(selectedAnswerIds)
@@ -90,6 +93,7 @@ public class TestAttemptReviewBuilder {
             Long responseId,
             QuestionTypeDto questionTypeDto,
             String questionText,
+            float maximumPoints,
             float earnedScore) {
         OpenEndedResponse openEnded = openEndedResponseRepository.findByResponseId(responseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Open-ended response not found"));
@@ -99,6 +103,7 @@ public class TestAttemptReviewBuilder {
         return TestReviewOpenEndedQuestionDto.builder()
                 .questionText(questionText)
                 .questionTypeDto(questionTypeDto)
+                .maximumPoints(maximumPoints)
                 .earnedScore(earnedScore)
                 .providedOpenEndedAnswer(openEnded.getAnswerText())
                 .aiEvaluationComment(evaluation.getComment())

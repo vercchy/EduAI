@@ -3,7 +3,7 @@ import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 
 function TestForm(props) {
-    const { questions, testAttemptId } = props;
+    const { questions, testAttemptId, subjectName, subjectId } = props;
     const navigate = useNavigate();
     const [responses, setResponses] = useState({});
     const [message, setMessage] = useState('');
@@ -45,7 +45,7 @@ function TestForm(props) {
             setMessage(error.response?.data?.message || 'Submission failed.');
         } finally {
             setSubmitting(false);
-            navigate('/home');
+            navigate('/tests-for-subject', { state: { subjectId: subjectId, subjectName: subjectName } })
         }
     };
 

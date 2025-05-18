@@ -13,4 +13,5 @@ public abstract class TestReviewQuestionDto {
     private String questionText;
     private QuestionTypeDto questionTypeDto;
     private Float earnedScore;
+    private Float maximumPoints;
 }

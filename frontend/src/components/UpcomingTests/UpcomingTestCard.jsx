@@ -3,7 +3,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useNavigate } from "react-router-dom";
 
 function UpcomingTestCard(props) {
-    const { isProfessor, id, title, description, startDate, endDate, duration, maxPoints } = props;
+    const { isProfessor, subjectName, subjectId, id, title, description, startDate, endDate, duration, maxPoints, testTakenByStudent } = props;
     const navigate = useNavigate();
     return (
         <div className="col-md-6 col-lg-4 mb-4">
@@ -32,16 +32,56 @@ function UpcomingTestCard(props) {
                         </li>
                     </ul>
 
-                    {!isProfessor && (
-                        <div className="text-start">
-                            <br/>
-                            <button
-                                className="btn btn-dark btn-sm"
-                                onClick={() => navigate('/take-test', { state: { testId: id, duration: duration} })}>
-                                Take Test
-                            </button>
-                        </div>
-                    )}
+                    <div className="text-start">
+                        {!isProfessor && (
+                            <>
+                                {!testTakenByStudent ? (
+                                    <button
+                                        className="btn btn-dark btn-sm"
+                                        onClick={() =>
+                                            navigate('/take-test', {
+                                                state: { testId: id, duration, subjectName, subjectId }
+                                            })
+                                        }
+                                    >
+                                        <i className="bi bi-pencil-square me-1"></i> Take Test
+                                    </button>
+                                ) : (
+                                    <div className="mt-3 p-3 border rounded bg-light text-center">
+                                        <span className="text-success fw-semibold d-block mb-2">
+                                            <i className="bi bi-check-circle me-2"></i>Test Already Taken
+                                        </span>
+                                        <button
+                                            className="btn btn-outline-primary btn-sm"
+                                            onClick={() =>
+                                                navigate('/review-test', {
+                                                    state: { testId: id, subjectId, subjectName }
+                                                })
+                                            }>
+                                            <i className="bi bi-search me-1"></i> Review Test
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {isProfessor && (
+                            <div className="mt-3 p-3 border rounded bg-light text-center">
+                                <span className="text-info fw-semibold d-block mb-2">
+                                    <i className="bi bi-people-fill me-2"></i>Test Overview
+                                </span>
+                                <button
+                                    className="btn btn-outline-primary btn-sm"
+                                    onClick={() =>
+                                        navigate('/review-submissions', {
+                                            state: { testId: id, subjectId, subjectName, testTitle: title }
+                                        })
+                                    }>
+                                    <i className="bi bi-search me-1"></i> Review Submissions
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

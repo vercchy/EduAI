@@ -22,26 +22,30 @@ public class TestService implements TestServiceInterface {
 
     private final TestRepository testRepository;
     private final StudentSubjectAccessRepository studentSubjectAccessRepository;
+    private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final QuestionServiceInterface questionService;
     private final AnswerServiceInterface answerService;
+    private final TestAttemptRepository testAttemptRepository;
 
     public TestService(TestRepository testRepository,
-                       StudentSubjectAccessRepository studentSubjectAccessRepository,
+                       StudentSubjectAccessRepository studentSubjectAccessRepository, StudentRepository studentRepository,
                        SubjectRepository subjectRepository,
                        QuestionRepository questionRepository,
                        AnswerRepository answerRepository,
                        QuestionServiceInterface questionService,
-                       AnswerServiceInterface answerServiceInterface) {
+                       AnswerServiceInterface answerServiceInterface, TestAttemptRepository testAttemptRepository) {
         this.testRepository = testRepository;
         this.studentSubjectAccessRepository = studentSubjectAccessRepository;
+        this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.questionService = questionService;
         this.answerService = answerServiceInterface;
+        this.testAttemptRepository = testAttemptRepository;
     }
 
 
@@ -58,7 +62,12 @@ public class TestService implements TestServiceInterface {
                 .toList();
 
         return tests.stream()
-                .map(TestMetadataDTO::new)
+                .map(test -> {
+                    TestAttempt testAttempt = testAttemptRepository
+                            .findTestAttemptByTestIdAndStudentUserEmail(test.getId(), studentEmail)
+                            .orElse(null);
+                    return new TestMetadataDTO(test, testAttempt != null);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -68,7 +77,7 @@ public class TestService implements TestServiceInterface {
         return testRepository
                 .findBySubjectId(subjectId)
                 .stream()
-                .map(TestMetadataDTO::new)
+                .map(test -> new TestMetadataDTO(test, false))
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +86,7 @@ public class TestService implements TestServiceInterface {
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new ResourceNotFoundException("Test not found"));
 
-        return new TestMetadataDTO(test);
+        return new TestMetadataDTO(test, false);
     }
 
     @Override
