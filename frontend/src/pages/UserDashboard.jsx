@@ -13,7 +13,6 @@ function UserDashboard() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` }
         api.get('/api/subjects')
             .then(response => {
                 setSubjects(response.data);

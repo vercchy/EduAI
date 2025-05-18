@@ -1,7 +1,10 @@
 import React from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { useNavigate } from "react-router-dom";
 
-function UpcomingTestCard({ isProfessor, title, description, startDate, endDate, duration, maxPoints }) {
+function UpcomingTestCard(props) {
+    const { isProfessor, id, title, description, startDate, endDate, duration, maxPoints } = props;
+    const navigate = useNavigate();
     return (
         <div className="col-md-6 col-lg-4 mb-4">
             <div className="card shadow-sm h-100 border-0 rounded-4">
@@ -32,7 +35,11 @@ function UpcomingTestCard({ isProfessor, title, description, startDate, endDate,
                     {!isProfessor && (
                         <div className="text-start">
                             <br/>
-                            <button className="btn btn-dark btn-sm">Take Test</button>
+                            <button
+                                className="btn btn-dark btn-sm"
+                                onClick={() => navigate('/take-test', { state: { testId: id, duration: duration} })}>
+                                Take Test
+                            </button>
                         </div>
                     )}
                 </div>

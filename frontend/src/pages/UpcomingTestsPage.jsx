@@ -28,7 +28,7 @@ function UpcomingTestsContainer() {
 
     useEffect(() => {
         fetchTestsForSubject();
-        }, []);
+        }, [subjectId]);
 
     return <UpcomingTests isProfessor={isProfessor} subjectName={subjectName} message={message} testData={testData} />;
 }

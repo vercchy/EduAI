@@ -28,7 +28,7 @@ function Subject() {
 
     useEffect(() => {
        fetchSubjectDetails();
-    }, []);
+    }, [subjectId]);
 
     const handleAssign = async () => {
         try {
