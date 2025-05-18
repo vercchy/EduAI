@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import api from '../api/axios';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import Auth from "../utils/auth";
 
-function TestAttemptReviewPage() {
+function TestAttemptDetailsPage() {
     const location = useLocation();
-    const testAttemptId = location.state?.testAttemptId;
+    const navigate = useNavigate();
+    const isProfessor = Auth.isProfessor();
+    const {
+        testAttemptId,
+        helperData
+    } = location.state || {};
+    const backClickPath = isProfessor ? '/review-submissions' : '/review-test-attempt';
     const [reviewData, setReviewData] = useState(null);
     const [error, setError] = useState('');
 
@@ -38,6 +45,23 @@ function TestAttemptReviewPage() {
         <>
             <Navbar />
             <div className="container my-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h4 className="fw-bold">Reviewed Answers</h4>
+                    <button
+                        className="btn btn-outline-secondary"
+                        onClick={() => navigate(backClickPath, {
+                            state: {
+                                testId: helperData?.testId,
+                                subjectId: helperData?.subjectId,
+                                subjectName: helperData?.subjectName,
+                                testTitle: helperData?.testTitle
+                            }
+                        })}
+                    >
+                        ← Back to Submissions
+                    </button>
+                </div>
+
                 <div className="row">
                     <div className="col-md-4">
                         <div className="bg-light p-4 rounded shadow-sm">
@@ -50,7 +74,6 @@ function TestAttemptReviewPage() {
                     </div>
 
                     <div className="col-md-8">
-                        <h4 className="mb-4">Reviewed Answers</h4>
                         {questionsToReview.map((q, idx) => (
                             <div key={idx} className="mb-4 p-4 bg-white rounded shadow-sm">
                                 <h5>Question {idx + 1}:</h5>
@@ -69,25 +92,23 @@ function TestAttemptReviewPage() {
                                         </div>
                                     </>
                                 ) : (
-                                    <>
-                                        <div>
-                                            {q.allAnswersForQuestion.map((a, index) => (
-                                                <div key={a.id} className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        type={q.questionTypeDto.name === 'SINGLE_CHOICE' ? 'radio' : 'checkbox'}
-                                                        name={`q_${idx}`}
-                                                        value={a.id}
-                                                        disabled
-                                                        checked={q.providedAnswerIds.includes(a.id)}
-                                                    />
-                                                    <label className="form-check-label">
-                                                        {`${index + 1}. ${a.answerText}`}
-                                                    </label>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </>
+                                    <div>
+                                        {q.allAnswersForQuestion.map((a, index) => (
+                                            <div key={a.id} className="form-check">
+                                                <input
+                                                    className="form-check-input"
+                                                    type={q.questionTypeDto.name === 'SINGLE_CHOICE' ? 'radio' : 'checkbox'}
+                                                    name={`q_${idx}`}
+                                                    value={a.id}
+                                                    disabled
+                                                    checked={q.providedAnswerIds.includes(a.id)}
+                                                />
+                                                <label className="form-check-label">
+                                                    {`${index + 1}. ${a.answerText}`}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
                                 )}
                             </div>
                         ))}
@@ -99,4 +120,4 @@ function TestAttemptReviewPage() {
     );
 }
 
-export default TestAttemptReviewPage;
+export default TestAttemptDetailsPage;

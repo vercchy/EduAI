@@ -4,9 +4,7 @@ import Auth from "../utils/auth";
 
 function Navbar() {
     const isUserLoggedIn = Auth.isUserLoggedIn();
-    const isProfessor = Auth.isProfessor();
     const homeTabTitle = isUserLoggedIn ? 'Subjects' : 'Home';
-    const takenTestsTabTitle = isProfessor ? 'Student Submissions' : 'Taken Tests';
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
@@ -19,13 +17,6 @@ function Navbar() {
             <div className="collapse navbar-collapse" id="navbarContent">
                 <ul className="navbar-nav ms-4">
                     <li className="nav-item"><a className="nav-link" href="/home">{homeTabTitle}</a></li>
-                    {isUserLoggedIn && (
-                        <>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/taken-tests">{takenTestsTabTitle}</a>
-                            </li>
-                        </>
-                    )}
                     <li className="nav-item"><a className="nav-link" href="#">About Us</a></li>
                     <li className="nav-item"><a className="nav-link" href="#">Contact</a></li>
                 </ul>

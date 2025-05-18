@@ -14,6 +14,7 @@ function ReviewSubmissionsPage() {
         subjectName,
         testTitle
     } = location.state || {};
+    const helperData = {testId, subjectId, subjectName, testTitle};
     const [submissions, setSubmissions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -58,7 +59,7 @@ function ReviewSubmissionsPage() {
                 <div className="row">
                     {submissions.map((submission) => (
                         <div key={submission.id} className="col-md-6 col-lg-4 mb-4">
-                            <TestSubmissionCard submission={submission} navigate={navigate} />
+                            <TestSubmissionCard submission={submission} navigate={navigate} helperData={helperData} />
                         </div>
                     ))}
                 </div>

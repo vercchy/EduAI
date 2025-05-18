@@ -61,8 +61,9 @@ public class TestAttemptService implements TestAttemptServiceInterface {
     }
 
     @Override
-    public TestAttemptBasicInfoDto getTestAttemptBasicInfo(Long testAttemptId, String studentEmail) {
-        TestAttempt testAttempt = validateTestAttemptAndStudentIsAuthorized(testAttemptId, studentEmail);
+    public TestAttemptBasicInfoDto getTestAttemptBasicInfo(Long testId, String studentEmail) {
+        TestAttempt testAttempt = testAttemptRepository.findTestAttemptByTestIdAndStudentUserEmail(testId, studentEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("TestAttempt not found"));
         return new TestAttemptBasicInfoDto(testAttempt);
     }
 
