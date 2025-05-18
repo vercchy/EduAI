@@ -21,6 +21,8 @@ import RegisterForm from "./pages/Register";
 import ReviewSubmissionsPage from "./pages/ReviewSubmissionsPage";
 import TestAttemptDetailsPage from "./pages/TestAttemptDetailsPage";
 import ReviewSingleStudentTestAttemptPage from "./pages/ReviewSingleStudentTestAttemptPage";
+import AboutUs from "./pages/AboutUs";
+import Contact from "./pages/Contact";
 
 reportWebVitals();
 
@@ -55,6 +57,9 @@ root.render(
                 <Route path="/review-test-attempt-details" element={<TestAttemptDetailsPage/>} />
                 <Route path="/add-subject" element={<AddSubject/>} />
                 <Route path="/create-test" element={<CreateTest/>} />
+                <Route path="/about-us" element={<AboutUs/>} />
+                <Route path="/contact" element={<Contact/>} />
+
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>

@@ -5,8 +5,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
+import { useNavigate } from 'react-router-dom';
 
 function Subject() {
+
+    const navigate = useNavigate();
     const location = useLocation();
     const subjectId = location.state?.subjectId;
     const isProfessor = localStorage.getItem('role') === 'ROLE_PROFESSOR';
@@ -59,9 +62,15 @@ function Subject() {
                 <p><strong>Professor:</strong> {subjectDetails.teacherDto.user.firstName} {subjectDetails.teacherDto.user.lastName} ({subjectDetails.teacherDto.user.email})</p>
                 {isProfessor &&
                     <>
-                <button className={"btn btn-dark"}>Create Test</button>
+                        <button
+                            className="btn btn-dark"
+                            onClick={() => navigate('/create-test', { state: { subjectId } })}
+                        >
+                            Create a new test
+                        </button>
 
-                <hr />
+
+                        <hr />
                 <h4>Assign Student</h4>
                 <input
                     type="email"

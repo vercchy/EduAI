@@ -17,8 +17,8 @@ function Navbar() {
             <div className="collapse navbar-collapse" id="navbarContent">
                 <ul className="navbar-nav ms-4">
                     <li className="nav-item"><a className="nav-link" href="/home">{homeTabTitle}</a></li>
-                    <li className="nav-item"><a className="nav-link" href="#">About Us</a></li>
-                    <li className="nav-item"><a className="nav-link" href="#">Contact</a></li>
+                    <li className="nav-item"><a className="nav-link" href="/about-us">About Us</a></li>
+                    <li className="nav-item"><a className="nav-link" href="/contact">Contact</a></li>
                 </ul>
                 <div className="ms-auto">
                     {!isUserLoggedIn ? (

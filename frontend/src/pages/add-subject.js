@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useNavigate } from 'react-router-dom';
 
 reportWebVitals();
 
@@ -18,7 +19,7 @@ function AddSubject() {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    // const navigate = useNavigate(); // Optional
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -50,8 +51,10 @@ function AddSubject() {
             setSuccess('Subject created successfully!');
             console.log('Created:', response.data);
 
-            // Optional redirect
-            // navigate('/teacher');
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 1000);
+
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to create subject');
         }

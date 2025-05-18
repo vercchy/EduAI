@@ -4,6 +4,11 @@ import React, { useState } from 'react';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+
 
 function CreateTest() {
     const [testInfo, setTestInfo] = useState({
@@ -23,6 +28,16 @@ function CreateTest() {
         multiple: 1,
         essay: 2
     };
+    const location = useLocation();
+    const passedSubjectId = location.state?.subjectId;
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (passedSubjectId) {
+            setTestInfo(prev => ({ ...prev, subjectId: passedSubjectId }));
+        }
+    }, [passedSubjectId]);
 
     const handleTestInfoChange = (e) => {
         const { name, value } = e.target;
@@ -153,6 +168,13 @@ function CreateTest() {
 
             console.log(data);
             alert('Test created successfully!');
+
+            navigate('/tests-for-subject', {
+                state: {
+                    subjectId: testInfo.subjectId,
+                    isProfessor: true
+                }
+            });
         } catch (err) {
             console.error('Error submitting test:', err);
             alert('Failed to create test.');
