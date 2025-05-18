@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import api from '../api/axios';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -8,6 +8,7 @@ import '../index.css';
 
 function Subject() {
     const location = useLocation();
+    const navigate = useNavigate();
     const subjectId = location.state?.subjectId;
     const isProfessor = localStorage.getItem('role') === 'ROLE_PROFESSOR';
     const token = localStorage.getItem('token');
@@ -59,7 +60,14 @@ function Subject() {
                 <p><strong>Professor:</strong> {subjectDetails.teacherDto.user.firstName} {subjectDetails.teacherDto.user.lastName} ({subjectDetails.teacherDto.user.email})</p>
                 {isProfessor &&
                     <>
-                <button className={"btn btn-dark"}>Create Test</button>
+                        <button
+                            className="btn btn-dark"
+                            onClick={() => navigate('/create-test', {
+                                state: { subjectId: subjectId }
+                            })}
+                        >
+                            Create Test
+                        </button>
 
                 <hr />
                 <h4>Assign Student</h4>

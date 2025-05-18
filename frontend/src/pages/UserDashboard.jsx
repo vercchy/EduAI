@@ -34,7 +34,16 @@ function UserDashboard() {
     return (
         <>
             <div className="container-fluid">
-                <div className="h2 px-4 mb-4">{headingText}</div>
+                <div className="d-flex justify-content-between align-items-center px-4 pt-4 mb-4">
+                    <h2 className="h2 mb-0">{headingText}</h2>
+                    {role === 'ROLE_PROFESSOR' && (
+                        <button
+                            className="btn btn-outline-primary btn-sm"
+                            onClick={() => navigate('/add-subject')}>
+                            <i className="bi bi-plus-circle me-1"></i> Create Subject
+                        </button>
+                    )}
+                </div>
 
                 {loading && <div className="px-4">Loading...</div>}
                 {error && <div className="text-danger px-4">{error}</div>}
