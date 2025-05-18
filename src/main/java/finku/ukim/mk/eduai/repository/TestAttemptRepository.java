@@ -1,6 +1,7 @@
 package finku.ukim.mk.eduai.repository;
 
 import finku.ukim.mk.eduai.model.TestAttempt;
+import finku.ukim.mk.eduai.model.TestAttemptStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,5 @@ import java.util.Optional;
 public interface TestAttemptRepository extends JpaRepository<TestAttempt, Long> {
     Optional<TestAttempt> findTestAttemptByTestIdAndStudentUserEmail(Long testId, String studentEmail);
     List<TestAttempt> findAllByTestId(Long testId);
+    List<TestAttempt> findByStudentUserIdAndStatus(Long studentId, TestAttemptStatus status);
 }
