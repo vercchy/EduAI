@@ -18,6 +18,7 @@ import TestInProgress from "./pages/TestInProgress";
 import Teacher from "./pages/teacher";
 import AddSubject from "./pages/add-subject";
 import Subject from "./pages/subject";
+import CreateTest from "./pages/CreateTest";
 
 
 // If you want to start measuring performance in your app, pass a function
@@ -172,6 +173,7 @@ root.render(
                 <Route path="/teacher" element={<Teacher/>} />
                 <Route path="/add-subject" element={<AddSubject/>} />
                 <Route path="/subject/:id" element={<Subject/>} />
+                <Route path="/create-test" element={<CreateTest/>} />
                 {/* Add other routes here, e.g. Home */}
             </Routes>
         </BrowserRouter>
