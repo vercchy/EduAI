@@ -31,7 +31,7 @@ public class ProfessorReportController {
         return ResponseEntity.ok(report);
     }
 
-    @GetMapping(value = "/professor-report/{subjectId}/{testId}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "{subjectId}/{testId}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> exportProfessorReportPdf(@PathVariable Long subjectId, @PathVariable Long testId) {
         ProfessorReportDto report = professorReportService.getProfessorReport(subjectId, testId);
         byte[] pdf = pdfExportService.exportProfessorReport(report);

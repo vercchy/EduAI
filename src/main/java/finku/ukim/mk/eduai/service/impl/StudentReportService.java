@@ -9,10 +9,7 @@ import finku.ukim.mk.eduai.repository.ResponseRepository;
 import finku.ukim.mk.eduai.repository.TestAttemptRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class StudentReportService {
@@ -46,7 +43,7 @@ public class StudentReportService {
 
         // Score trend - list of dates and points
         List<StudentReportDto.ScoreTrendPoint> scoreTrend = attempts.stream()
-                .sorted((a,b) -> a.getSubmissionDate().compareTo(b.getSubmissionDate()))
+                .sorted(Comparator.comparing(TestAttempt::getSubmissionDate))
                 .map(a -> new StudentReportDto.ScoreTrendPoint(
                         a.getSubmissionDate().toLocalDate().toString(), a.getTotalScore()))
                 .toList();
