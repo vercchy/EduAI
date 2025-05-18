@@ -2,6 +2,8 @@ package finku.ukim.mk.eduai.controller;
 
 import finku.ukim.mk.eduai.dto.StartTestResponseDto;
 import finku.ukim.mk.eduai.dto.SubmitTestAttemptRequestDto;
+import finku.ukim.mk.eduai.dto.TestAttemptBasicInfoDto;
+import finku.ukim.mk.eduai.dto.TestAttemptReviewDto;
 import finku.ukim.mk.eduai.service.impl.TestAttemptService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +17,20 @@ public class TestAttemptController {
 
     public TestAttemptController(TestAttemptService testAttemptService) {
         this.testAttemptService = testAttemptService;
+    }
+
+    @GetMapping("/{testAttemptId}")
+    public ResponseEntity<TestAttemptBasicInfoDto> getTestAttemptBasicInfo(
+            @PathVariable Long testAttemptId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(testAttemptService.getTestAttemptBasicInfo(testAttemptId, userDetails.getUsername()));
+    }
+
+    @GetMapping("/review/{testAttemptId}")
+    public ResponseEntity<TestAttemptReviewDto> reviewTestAttempt(
+            @PathVariable Long testAttemptId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(testAttemptService.reviewTestAttempt(testAttemptId, userDetails.getUsername()));
     }
 
     @PostMapping("/start/{testId}")

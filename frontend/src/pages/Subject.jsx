@@ -1,52 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import api from '../api/axios';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
 
 function Subject() {
-    const { id } = useParams(); // subjectId from URL
+    const location = useLocation();
+    const subjectId = location.state?.subjectId;
+    const isProfessor = localStorage.getItem('role') === 'ROLE_PROFESSOR';
+    const token = localStorage.getItem('token');
     const [studentEmail, setStudentEmail] = useState("");
     const [message, setMessage] = useState("");
     const [subjectDetails, setSubjectDetails] = useState(null);
-    const [currentUser, setCurrentUser] = useState(null);
 
-
-    useEffect(() => {
-        axios.get(`http://localhost:9090/api/subjects/${id}`, { withCredentials: true })
+    const fetchSubjectDetails = () => {
+        api.get(`/api/subjects/${subjectId}`)
             .then(response => {
                 setSubjectDetails(response.data);
             })
             .catch(error => {
-                console.error("Could not load subject", error);
+                console.error("Could not load subject: ", error.response.data.message);
             });
-        // Fetch current user
-        axios.get('http://localhost:9090/api/auth/current-user', { withCredentials: true })
-            .then(response => {
-                setCurrentUser(response.data);
-            })
-            .catch(error => {
-                console.error("Could not load current user", error);
-            });
+    };
 
-    }, [id]);
+
+    useEffect(() => {
+       fetchSubjectDetails();
+    }, [subjectId]);
 
     const handleAssign = async () => {
         try {
-            const response = await axios.post('http://localhost:9090/api/subjects/assign-student', {
-                subjectId: id,
+            const response = await api.post('/api/subjects/assign-student', {
+                subjectId: subjectId,
                 studentEmail: studentEmail
-            }, { withCredentials: true });
+            });
 
             setMessage(response.data);
-            // Refresh student list
-            const updatedSubject = await axios.get(`http://localhost:9090/api/subjects/${id}`, { withCredentials: true });
-            setSubjectDetails(updatedSubject.data);
+            fetchSubjectDetails();
         } catch (error) {
-            setMessage("Error assigning student.");
-            console.error(error);
+            setMessage(error.response.data.message);
         }
     };
 
@@ -63,9 +57,11 @@ function Subject() {
                 <p><strong>Difficulty:</strong> {subjectDetails.difficultyLevel}</p>
                 <p><strong>Created At:</strong> {new Date(subjectDetails.createdAt).toLocaleString()}</p>
                 <p><strong>Professor:</strong> {subjectDetails.teacherDto.user.firstName} {subjectDetails.teacherDto.user.lastName} ({subjectDetails.teacherDto.user.email})</p>
+                {isProfessor &&
+                    <>
+                <button className={"btn btn-dark"}>Create Test</button>
 
                 <hr />
-
                 <h4>Assign Student</h4>
                 <input
                     type="email"
@@ -77,10 +73,10 @@ function Subject() {
                 <button className="btn btn-primary" onClick={handleAssign}>
                     Add student to subject
                 </button>
-
                 {message && <p className="mt-2 text-info">{message}</p>}
-
                 <hr />
+                    </>
+                }
 
                 <h4>Assigned Students</h4>
                 {subjectDetails.students.length === 0 ? (
