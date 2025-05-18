@@ -54,8 +54,8 @@ function UpcomingTestCard(props) {
                                         <button
                                             className="btn btn-outline-primary btn-sm"
                                             onClick={() =>
-                                                navigate('/review-test', {
-                                                    state: { testId: id, subjectId, subjectName }
+                                                navigate('/review-test-attempt', {
+                                                    state: { testId: id, subjectId, subjectName, testTitle: title }
                                                 })
                                             }>
                                             <i className="bi bi-search me-1"></i> Review Test

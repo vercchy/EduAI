@@ -10,7 +10,7 @@ import java.util.List;
 public interface TestAttemptServiceInterface {
     StartTestResponseDto startTestAttempt(Long testId, String studentEmail);
     void submitTestAttempt(SubmitTestAttemptRequestDto submitTestAttemptRequestDto, String studentEmail);
-    TestAttemptBasicInfoDto getTestAttemptBasicInfo(Long testAttemptId, String studentEmail);
+    TestAttemptBasicInfoDto getTestAttemptBasicInfo(Long testId, String studentEmail);
     List<TestAttemptBasicInfoDto> getTestAttemptSummariesForTest(Long testId, String teacherEmail);
     TestAttemptReviewDto reviewTestAttempt(Long testAttemptId, String email);
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-function TestSubmissionCard({ submission, navigate }) {
+function TestSubmissionCard({ submission, navigate, helperData }) {
     const { id, status, score, submissionDate, testTitle, testMaxPoints, studentEmail } = submission;
     const isGraded = status.name === 'GRADED';
 
@@ -36,7 +36,7 @@ function TestSubmissionCard({ submission, navigate }) {
                 <div className="text-end">
                     <button
                         className="btn btn-outline-primary btn-sm"
-                        onClick={() => navigate('/review-test-attempt-details', { state: { testAttemptId: id } })}
+                        onClick={() => navigate('/review-test-attempt-details', { state: { testAttemptId: id, helperData: helperData } })}
                         disabled={!isGraded}
                     >
                         <i className="bi bi-eye me-1"></i> Review Test

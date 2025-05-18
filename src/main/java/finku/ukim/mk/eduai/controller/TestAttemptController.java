@@ -21,11 +21,11 @@ public class TestAttemptController {
         this.testAttemptService = testAttemptService;
     }
 
-    @GetMapping("/{testAttemptId}")
+    @GetMapping("/{testId}")
     public ResponseEntity<TestAttemptBasicInfoDto> getTestAttemptBasicInfo(
-            @PathVariable Long testAttemptId,
+            @PathVariable Long testId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(testAttemptService.getTestAttemptBasicInfo(testAttemptId, userDetails.getUsername()));
+        return ResponseEntity.ok(testAttemptService.getTestAttemptBasicInfo(testId, userDetails.getUsername()));
     }
 
     @GetMapping("/review/{testAttemptId}")
