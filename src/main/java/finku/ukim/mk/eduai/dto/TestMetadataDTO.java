@@ -18,8 +18,9 @@ public class TestMetadataDTO {
     private LocalDateTime endDate;
     private int duration;
     private int maxPoints;
+    private boolean isTestTakenByStudent;
 
-    public TestMetadataDTO(Test test) {
+    public TestMetadataDTO(Test test, boolean isTestTakenByStudent) {
         this.id = test.getId();
         this.title = test.getTitle();
         this.description = test.getDescription();
@@ -27,6 +28,7 @@ public class TestMetadataDTO {
         this.endDate = test.getEndDate();
         this.duration = test.getDurationMinutes();
         this.maxPoints = test.getMaxPoints();
+        this.isTestTakenByStudent = isTestTakenByStudent;
     }
 
 

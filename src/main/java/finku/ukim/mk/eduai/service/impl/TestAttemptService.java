@@ -67,6 +67,16 @@ public class TestAttemptService implements TestAttemptServiceInterface {
     }
 
     @Override
+    public List<TestAttemptBasicInfoDto> getTestAttemptSummariesForTest(Long testId, String teacherEmail) {
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new ResourceNotFoundException("Test not found"));
+        if (!test.getSubject().getTeacher().getUser().getEmail().equals(teacherEmail))
+            throw new UnauthorizedActionException("You are not authorized to perform this action");
+        List<TestAttempt> testAttempts = testAttemptRepository.findAllByTestId(testId);
+        return testAttempts.stream().map(TestAttemptBasicInfoDto::new).collect(Collectors.toList());
+    }
+
+    @Override
     public TestAttemptReviewDto reviewTestAttempt(Long testAttemptId, String email) {
         TestAttempt testAttempt = checkAuthorizationAndExtractTestAttemptBasedOnRole(testAttemptId, email);
         return testAttemptReviewBuilder.buildTestAttemptReviewDto(testAttempt);

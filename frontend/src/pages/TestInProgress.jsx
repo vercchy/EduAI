@@ -14,9 +14,11 @@ function TestInProgress() {
     const location = useLocation();
     const testId = location.state?.testId;
     const duration = location.state?.duration;
+    const subjectName = location.state?.subjectName;
+    const subjectId = location.state?.subjectId;
     const [testAttemptId, setTestAttemptId] = useState(null);
     const [questions, setQuestions] = useState([]);
-    const [remainingTime, setRemainingTime] = useState(0);
+    const [remainingTime, setRemainingTime] = useState(duration * 60);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
 
@@ -25,7 +27,6 @@ function TestInProgress() {
             .then(res => {
                 setQuestions(res.data.questions);
                 setTestAttemptId(res.data.id);
-                setRemainingTime(duration);
                 setLoading(false);
             })
             .catch(err => {
@@ -70,7 +71,11 @@ function TestInProgress() {
                             </div>
                         </div>
                         <div className="col-md-9">
-                            <TestForm questions={questions} testAttemptId={testAttemptId} />
+                            <TestForm
+                                questions={questions}
+                                testAttemptId={testAttemptId}
+                                subjectName={subjectName}
+                                subjectId={subjectId}/>
                         </div>
                     </div>
                 )}

@@ -10,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/test-attempts")
 public class TestAttemptController {
@@ -31,6 +33,14 @@ public class TestAttemptController {
             @PathVariable Long testAttemptId,
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(testAttemptService.reviewTestAttempt(testAttemptId, userDetails.getUsername()));
+    }
+
+    @GetMapping("/summary/{testId}")
+    public ResponseEntity<List<TestAttemptBasicInfoDto>> getTestAttemptSummariesForTest(
+            @PathVariable Long testId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(testAttemptService.getTestAttemptSummariesForTest(testId, userDetails.getUsername()));
     }
 
     @PostMapping("/start/{testId}")

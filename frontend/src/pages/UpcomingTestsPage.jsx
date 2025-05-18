@@ -30,7 +30,7 @@ function UpcomingTestsContainer() {
         fetchTestsForSubject();
         }, [subjectId]);
 
-    return <UpcomingTests isProfessor={isProfessor} subjectName={subjectName} message={message} testData={testData} />;
+    return <UpcomingTests isProfessor={isProfessor} subjectName={subjectName} subjectId={subjectId} message={message} testData={testData} />;
 }
 
 export default UpcomingTestsContainer;

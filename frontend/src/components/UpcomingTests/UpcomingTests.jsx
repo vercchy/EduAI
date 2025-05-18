@@ -3,7 +3,7 @@ import UpcomingTestCard from './UpcomingTestCard';
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 
-function UpcomingTests({ isProfessor, subjectName, message, testData }) {
+function UpcomingTests({ isProfessor, subjectName, subjectId, message, testData }) {
     const pageTitle = isProfessor
         ? "All Tests"
         : "Currently Available Tests";
@@ -21,7 +21,7 @@ function UpcomingTests({ isProfessor, subjectName, message, testData }) {
                         <h5 className="mb-4">{test.title}</h5>
                         <hr className="mt-0 mb-4"/>
                         <div className="row bg-light p-4 rounded-3">
-                            <UpcomingTestCard key={test.id} isProfessor={isProfessor} {...test} />
+                            <UpcomingTestCard key={test.id} isProfessor={isProfessor} subjectName={subjectName} subjectId={subjectId} {...test} />
                         </div>
                     </div>
                 ))}
