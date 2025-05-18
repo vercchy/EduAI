@@ -102,9 +102,9 @@ function AddSubject() {
                             value={formData.difficultyLevel}
                             onChange={handleChange}
                         >
-                            <option value="1">Easy</option>
-                            <option value="2">Medium</option>
-                            <option value="3">Hard</option>
+                            <option value="0">Easy</option>
+                            <option value="1">Medium</option>
+                            <option value="2">Hard</option>
                         </select>
                     </div>
                     <button type="submit" className="btn btn-primary">Create Subject</button>

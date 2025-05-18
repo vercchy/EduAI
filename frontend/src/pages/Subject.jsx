@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import api from '../api/axios';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../index.css';
-import { useNavigate } from 'react-router-dom';
 
 function Subject() {
-
-    const navigate = useNavigate();
     const location = useLocation();
+    const navigate = useNavigate();
     const subjectId = location.state?.subjectId;
     const isProfessor = localStorage.getItem('role') === 'ROLE_PROFESSOR';
-    const token = localStorage.getItem('token');
     const [studentEmail, setStudentEmail] = useState("");
     const [message, setMessage] = useState("");
     const [subjectDetails, setSubjectDetails] = useState(null);
@@ -64,9 +61,10 @@ function Subject() {
                     <>
                         <button
                             className="btn btn-dark"
-                            onClick={() => navigate('/create-test', { state: { subjectId } })}
-                        >
-                            Create a new test
+                            onClick={() => navigate('/create-test', {
+                                state: { subjectId: subjectId, subjectName: subjectDetails.name }
+                            })}>
+                            Create Test
                         </button>
 
 

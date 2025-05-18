@@ -1,34 +1,35 @@
-// src/pages/CreateTest.js
-
 import React, { useState } from 'react';
+import api from "../api/axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 
 
 function CreateTest() {
+    const location = useLocation();
+    const subjectId = location.state?.subjectId;
+    const subjectName = location.state?.subjectName;
+
     const [testInfo, setTestInfo] = useState({
         title: '',
         description: '',
         startDate: '',
         endDate: '',
         duration: '',
-        maxPoints: '',
-        subjectId: ''
+        maxPoints: ''
     });
 
     const [questions, setQuestions] = useState([]);
+    const [successMsg, setSuccessMsg] = useState('');
 
     const questionTypeMapping = {
         single: 0,
         multiple: 1,
         essay: 2
     };
-    const location = useLocation();
     const passedSubjectId = location.state?.subjectId;
     const navigate = useNavigate();
 
@@ -45,15 +46,17 @@ function CreateTest() {
     };
 
     const addQuestion = (type) => {
-        setQuestions([...questions, {
-            id: Date.now(),
-            type,
-            text: '',
-            image: '',
-            maxPoints: '',
-            options: type !== 'essay' ? [''] : [],
-            correctAnswers: type === 'multiple' ? [] : (type === 'single' ? null : undefined),
-        }]);
+        setQuestions(prev => [
+            ...prev,
+            {
+                id: Date.now(),
+                type,
+                text: '',
+                maxPoints: '',
+                options: type !== 'essay' ? [''] : [],
+                correctAnswers: type === 'multiple' ? [] : (type === 'single' ? null : undefined),
+            }
+        ]);
     };
 
     const updateQuestion = (id, field, value) => {
@@ -105,6 +108,7 @@ function CreateTest() {
             })
         );
     };
+
     const updateQuestionPoints = (id, value) => {
         setQuestions(prev =>
             prev.map(q =>
@@ -114,7 +118,7 @@ function CreateTest() {
     };
 
     const handleSubmit = async () => {
-        const token = localStorage.getItem("token");
+
         const formattedQuestions = questions.map(q => ({
             questionText: q.text,
             questionType: questionTypeMapping[q.type],
@@ -135,52 +139,33 @@ function CreateTest() {
                 endDate: testInfo.endDate,
                 duration: parseInt(testInfo.duration),
                 maxPoints: parseInt(testInfo.maxPoints),
-                subjectId: parseInt(testInfo.subjectId)
+                subjectId: parseInt(subjectId)
             },
             questions: formattedQuestions
         };
 
         try {
-            const res = await fetch('http://localhost:9090/api/tests', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
+            await api.post('/api/tests', payload);
+            setSuccessMsg("Test was created successfully.");
+            setTestInfo({
+                title: '',
+                description: '',
+                startDate: '',
+                endDate: '',
+                duration: '',
+                maxPoints: ''
             });
-
-            const text = await res.text();
-
-
-            if (!res.ok) {
-                console.error("Backend error response:", text);
-                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-            }
-
-            // parse JSON from text (assuming backend returns JSON when success)
-            let data;
-            try {
-                data = JSON.parse(text);
-            } catch {
-                data = null;  // Response was empty or not JSON
-            }
-
-            console.log(data);
-            alert('Test created successfully!');
 
             navigate('/tests-for-subject', {
                 state: {
-                    subjectId: testInfo.subjectId,
-                    isProfessor: true
+                    subjectId: subjectId,
+                    subjectName: subjectName
                 }
             });
         } catch (err) {
-            console.error('Error submitting test:', err);
-            alert('Failed to create test.');
+            console.error('Error submitting test:', err.response?.data || err.message);
         }
     };
-
 
     return (
         <>
@@ -247,16 +232,6 @@ function CreateTest() {
                                 onChange={handleTestInfoChange}
                             />
                         </div>
-                        <div className="col">
-                            <input
-                                type="number"
-                                className="form-control"
-                                name="subjectId"
-                                placeholder="Subject ID"
-                                value={testInfo.subjectId}
-                                onChange={handleTestInfoChange}
-                            />
-                        </div>
                     </div>
                 </div>
 
@@ -269,7 +244,6 @@ function CreateTest() {
                 {questions.map((q, idx) => (
                     <div key={q.id} className="card mb-4">
                         <div className="card-body">
-
                             <div className="d-flex justify-content-between">
                                 <h5>Question {idx + 1} ({q.type})</h5>
                                 <button className="btn btn-sm btn-danger" onClick={() => removeQuestion(q.id)}>Remove</button>
@@ -291,16 +265,6 @@ function CreateTest() {
                                     min="1"
                                 />
                             </div>
-
-                            <input
-                                type="text"
-                                className="form-control mb-2"
-                                placeholder="Optional: Image URL"
-                                value={q.image}
-                                onChange={(e) => updateQuestion(q.id, 'image', e.target.value)}
-                            />
-
-                            {q.image && <img src={q.image} alt="Question" className="img-fluid mb-2" />}
 
                             {q.type !== 'essay' && (
                                 <>
@@ -345,6 +309,12 @@ function CreateTest() {
 
                 {questions.length > 0 && (
                     <button className="btn btn-primary" onClick={handleSubmit}>Submit Test</button>
+                )}
+
+                {successMsg && (
+                    <div className="alert alert-success mt-4">
+                        {successMsg}
+                    </div>
                 )}
             </div>
             <Footer />
