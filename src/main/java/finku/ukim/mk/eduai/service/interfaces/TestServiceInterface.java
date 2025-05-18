@@ -2,6 +2,7 @@ package finku.ukim.mk.eduai.service.interfaces;
 
 import finku.ukim.mk.eduai.dto.CreateTestDto;
 import finku.ukim.mk.eduai.dto.TestMetadataDTO;
+import finku.ukim.mk.eduai.model.Test;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ public interface TestServiceInterface {
     List<TestMetadataDTO> getTestsByProfessorAndSubject(Long subjectId, String professorEmail);
     TestMetadataDTO getTestMetadata(Long testId);
     void createTest(CreateTestDto createTestDto, String professorEmail);
+    List<Test> getTestsForSubject(Long subjectId);
 }

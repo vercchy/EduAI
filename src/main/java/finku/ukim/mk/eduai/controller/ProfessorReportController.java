@@ -2,6 +2,7 @@ package finku.ukim.mk.eduai.controller;
 import finku.ukim.mk.eduai.dto.ProfessorReportDto;
 import finku.ukim.mk.eduai.service.impl.PdfExportService;
 import finku.ukim.mk.eduai.service.impl.ProfessorReportService;
+import finku.ukim.mk.eduai.service.impl.TestService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +17,18 @@ public class ProfessorReportController {
 
     private final ProfessorReportService professorReportService;
     private final PdfExportService pdfExportService;
+    private final TestService testService;
 
-    public ProfessorReportController(ProfessorReportService professorReportService, PdfExportService pdfExportService) {
+    public ProfessorReportController(ProfessorReportService professorReportService, PdfExportService pdfExportService, TestService testService) {
         this.professorReportService = professorReportService;
         this.pdfExportService = pdfExportService;
+        this.testService = testService;
     }
 
-    @GetMapping("/{subjectId}/{testId}")
+    @GetMapping("/{subjectId}")
     public ResponseEntity<ProfessorReportDto> getProfessorReport(
-            @PathVariable Long subjectId,
-            @PathVariable Long testId) {
-
-        ProfessorReportDto report = professorReportService.getProfessorReport(subjectId, testId);
+            @PathVariable Long subjectId) {
+        ProfessorReportDto report = professorReportService.getProfessorReport(subjectId, testService.getTestsForSubject(subjectId).getLast().getId());
         return ResponseEntity.ok(report);
     }
 
