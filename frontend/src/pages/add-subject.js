@@ -52,7 +52,7 @@ function AddSubject() {
             console.log('Created:', response.data);
 
             setTimeout(() => {
-                navigate('/dashboard');
+                navigate('/home');
             }, 1000);
 
         } catch (err) {
