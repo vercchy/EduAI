@@ -34,11 +34,7 @@ const AboutUs = () => {
 
                 <div className="about-tech">
                     <h2>Tech Stack</h2>
-                    <p>React · Spring Boot · PostgreSQL · Docker · JWT Auth · Custom CSS</p>
-                </div>
-
-                <div className="about-footer">
-                    <p>&copy; {new Date().getFullYear()} TestApp Team. All rights reserved.</p>
+                    <p>React · Spring Boot · PostgreSQL · Docker · JWT Auth · Custom CSS · Llama</p>
                 </div>
             </div>
         </div>

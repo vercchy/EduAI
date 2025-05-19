@@ -66,15 +66,12 @@ function Login() {
                     <div className="col-md-6 mb-4 mb-md-0 pe-md-5">
                         <h2 className="fw-bold mb-3">Students Testimonials</h2>
                         <p className="text-muted mb-4">
-                            Lorem ipsum dolor sit amet consectetur. Tempus tincidunt etiam eget elit id imperdiet et.
-                            Cras eu sit dignissim lorem nibh et. Ac cum eget habitasse in velit fringilla feugiat senectus in.
+                            Let's see what the students say about EduAI
                         </p>
 
                         <div className="bg-white p-4 rounded-4 shadow-sm border">
                             <p className="text-secondary mb-3">
-                                The web design course provided a solid foundation for me. The instructors were
-                                knowledgeable and supportive, and the interactive learning environment was
-                                engaging. I highly recommend it!
+                                The EduAI platform transformed how I prepare for exams. Taking professor-designed practice tests helped me identify weak spots in my understanding before the real exam. My grades improved significantly this semester!
                             </p>
 
                             <div className="d-flex align-items-center justify-content-between">
@@ -88,7 +85,6 @@ function Login() {
                                     />
                                     <p className="fw-semibold mb-0">Marko M</p>
                                 </div>
-                                <button className="btn btn-outline-secondary btn-sm">Read More</button>
                             </div>
                         </div>
                     </div>

@@ -16,7 +16,7 @@
 .contact-title {
     font-size: 2.5rem;
     text-align: center;
-    color: #023e8a;
+    color: #FF9500;
     margin-bottom: 10px;
 }
 
@@ -51,13 +51,13 @@
 
 .contact-form input:focus,
 .contact-form textarea:focus {
-    border-color: #023e8a;
+    border-color: #FF9500;
     outline: none;
     background-color: #fff;
 }
 
 .submit-button {
-    background-color: #023e8a;
+    background-color: #FF9500;
     color: #fff;
     border: none;
     padding: 14px 24px;
@@ -68,5 +68,5 @@
 }
 
 .submit-button:hover {
-    background-color: #0353a4;
+    background-color: #FF9500;
 }

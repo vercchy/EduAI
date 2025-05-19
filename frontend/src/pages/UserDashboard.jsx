@@ -76,7 +76,7 @@ function UserDashboard() {
                     <h2 className="h2 mb-0">{headingText}</h2>
                     {role === 'ROLE_PROFESSOR' && (
                         <button
-                            className="btn btn-outline-primary btn-sm"
+                            className="btn btn-outline-custom btn-sm"
                             onClick={() => navigate('/add-subject')}
                         >
                             <i className="bi bi-plus-circle me-1"></i> Create Subject
@@ -185,7 +185,7 @@ function UserDashboard() {
                                 <div className="card h-100 shadow-sm border-0 rounded">
                                     <div className="card-body d-flex flex-column justify-content-between">
                                         <div>
-                                            <h5 className="card-title text-primary">{subject.name}</h5>
+                                            <h5 className="card-title" style={{ color: '#FF9500' }}>{subject.name}</h5>
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 By {subject.professorFullName}
                                             </h6>
@@ -193,7 +193,7 @@ function UserDashboard() {
                                         </div>
                                         <div className="mt-3 d-flex flex-wrap gap-2">
                                             <button
-                                                className="btn btn-outline-primary"
+                                                className="btn btn-outline-custom"
                                                 onClick={() =>
                                                     navigate('/course-details', {
                                                         state: { subjectId: subject.id },

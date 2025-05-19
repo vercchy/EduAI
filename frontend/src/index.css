@@ -27,3 +27,17 @@ body {
 .primary-color {
   color: #FF9500;
 }
+.btn-outline-custom {
+  color: #FF9500;
+  border: 1px solid #FF9500;
+  background-color: transparent;
+}
+
+.btn-outline-custom:hover {
+  color: #fff;
+  background-color: #FF9500;
+  border-color: #FF9500;
+}
+.text-custom-orange {
+  color: #FF9500;
+}

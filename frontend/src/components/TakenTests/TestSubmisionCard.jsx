@@ -35,7 +35,7 @@ function TestSubmissionCard({ submission, navigate, helperData }) {
 
                 <div className="text-end">
                     <button
-                        className="btn btn-outline-primary btn-sm"
+                        className="btn btn-outline-custom btn-sm"
                         onClick={() => navigate('/review-test-attempt-details', { state: { testAttemptId: id, helperData: helperData } })}
                         disabled={!isGraded}
                     >

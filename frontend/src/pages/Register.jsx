@@ -61,7 +61,7 @@ function RegisterForm() {
                                 type="text"
                                 name="fullName"
                                 className="form-control"
-                                placeholder="Enter your Name"
+                                placeholder="Enter your Name and Surname"
                                 value={formData.fullName}
                                 onChange={handleChange}
                                 required
@@ -95,12 +95,6 @@ function RegisterForm() {
                         </div>
 
                         <button type="submit" className="btn btn-custom-color w-100 text-white mb-3">Sign Up</button>
-                        <div className="text-center mb-3 text-muted">OR</div>
-                        <button type="button" className="btn btn-light w-100 border">
-                            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="google" className="me-2" />
-                            Sign Up with Google
-                        </button>
-
                         <p className="text-center mt-4">
                             Already have an account? <a href="/login">Login</a> <span>↗</span>
                         </p>

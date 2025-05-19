@@ -60,7 +60,7 @@ function Subject() {
                 {isProfessor &&
                     <>
                         <button
-                            className="btn btn-dark"
+                            className="btn btn btn-outline-secondary"
                             onClick={() => navigate('/create-test', {
                                 state: { subjectId: subjectId, subjectName: subjectDetails.name }
                             })}>
@@ -77,7 +77,7 @@ function Subject() {
                     onChange={e => setStudentEmail(e.target.value)}
                     placeholder="Enter student email"
                 />
-                <button className="btn btn-primary" onClick={handleAssign}>
+                <button className="btn btn-outline-custom" onClick={handleAssign}>
                     Add student to subject
                 </button>
                 {message && <p className="mt-2 text-info">{message}</p>}

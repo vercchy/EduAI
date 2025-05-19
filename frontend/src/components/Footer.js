@@ -11,14 +11,6 @@ function Footer() {
                         <p><i className="bi bi-telephone"></i> +389 70 123 456</p>
                         <p><i className="bi bi-geo-alt"></i> Skopje</p>
                     </div>
-                    <div className="col-md-3 mb-4">
-                        <h6>Home</h6>
-                        <ul className="list-unstyled">
-                            <li>Benefits</li>
-                            <li>Our Courses</li>
-                            <li>Our FAQ</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </footer>
