@@ -2,7 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom/client';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Login from './pages/Login';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -46,6 +46,7 @@ export const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
         <BrowserRouter>
             <Routes>
+                <Route path="/" element={<Navigate to="/home" />} />
                 <Route path="/home" element={<App />} />
                 <Route path="/login" element={<Login/>} />
                 <Route path="/dashboard" element={<UserDashboard />} />
