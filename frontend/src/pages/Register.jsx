@@ -3,6 +3,8 @@ import api from "../api/axios";
 import zhurka_slika from '../assets/zhurkaaa.svg';
 import '../index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+
 
 function RegisterForm() {
     const [formData, setFormData] = useState({
@@ -13,6 +15,8 @@ function RegisterForm() {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const navigate = useNavigate();
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,6 +43,9 @@ function RegisterForm() {
             });
 
             setSuccess(response.data);
+            setTimeout(() => {
+                navigate('/login');
+            }, 1000);
         } catch (err) {
             setError(err.response?.data || 'Registration failed');
         }
