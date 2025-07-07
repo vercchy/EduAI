@@ -88,9 +88,9 @@ function UserDashboard() {
                     {role === 'ROLE_PROFESSOR' && professorReport && (
                         <Box mb={5}>
                             <Typography variant="h5" color="primary" gutterBottom>
-                                Professor Summary Report for the Latest Test
+                               <span className={'primary-color'}>Professor Summary Report for the Latest Test</span>
                             </Typography>
-                            {professorReport.scoreTrend?.length > 0 && (
+                           {/* {professorReport.scoreTrend?.length > 0 && (
                                 <Box mb={4}>
                                     <Card variant="outlined" sx={{ borderRadius: 2, height: 300 }}>
                                         <CardContent>
@@ -116,17 +116,17 @@ function UserDashboard() {
                                         </CardContent>
                                     </Card>
                                 </Box>
-                            )}
+                            )}*/}
 
                             <Grid container spacing={3}>
                                 <Grid item xs={12} sm={4}>
                                     <Card variant="outlined" sx={{ borderRadius: 2, height: '100%' }}>
                                         <CardContent>
                                             <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                                Average Correctness
+                                                <span className={'primary-color'}>Average Correctness</span>
                                             </Typography>
                                             <Typography variant="h6" color="primary">
-                                                {professorReport.averageCorrectPercent}%
+                                                <span className={'primary-color'}>{professorReport.averageCorrectPercent}%</span>
                                             </Typography>
                                         </CardContent>
                                     </Card>
