@@ -1,41 +1,65 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  app:
+  backend:
     build: .
-    container_name: EduAI
+    container_name: eduai_backend
     ports:
-      - "9090:8080"
-    depends_on:
-      - db
+      - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/EduAI_UIKTP
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
-      - mynetwork
+      - eduai_network
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: eduai_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - eduai_network
 
   db:
     image: postgres:16
-    container_name: EduAI_db
+    container_name: eduai_db
     restart: always
     environment:
-      POSTGRES_DB: EduAI_UIKTP
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     networks:
-      - mynetwork
+      - eduai_network
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/create-tables.sql:/docker-entrypoint-initdb.d/EduAI.sql
+      - ./database/create-tables.sql:/docker-entrypoint-initdb.d/create-tables.sql:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 networks:
-  mynetwork:
+  eduai_network:
     driver: bridge
 
 volumes:
   postgres_data:
-    driver: local
