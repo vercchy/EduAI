@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate branch-date tag
         id: vars
-        run: echo "TAG=${GITHUB_REF_NAME}-$(date +'%Y%m%d')" >> $GITHUB_ENV
+        run: echo "TAG="${GITHUB_REF_NAME}-${GITHUB_SHA::7}"" >> $GITHUB_ENV
 
       - name: Build and push Backend image
         uses: docker/build-push-action@v5
