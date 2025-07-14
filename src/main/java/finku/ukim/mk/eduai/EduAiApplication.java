@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 )
 @EnableAsync
 @EntityScan(basePackages = "finku.ukim.mk.eduai.model")
+@EnableJpaRepositories(basePackages = "finku.ukim.mk.eduai.repository")
 public class EduAiApplication {
 
 	public static void main(String[] args) {
