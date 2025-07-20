@@ -15,12 +15,12 @@ spring:
       key: ${FIREWORKS_API_KEY}
   datasource:
     write:
-      jdbc-url: jdbc:postgresql://postgres-write.default.svc.cluster.local:5432/eduai
+      jdbc-url: jdbc:postgresql://postgres-write.eduai.svc.cluster.local:5432/eduai
       username: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
       driver-class-name: org.postgresql.Driver
     read:
-      jdbc-url: jdbc:postgresql://postgres-read.default.svc.cluster.local:5432/eduai
+      jdbc-url: jdbc:postgresql://postgres-read.eduai.svc.cluster.local:5432/eduai
       username: ${POSTGRES_USER}
       password: ${POSTGRES_PASSWORD}
       driver-class-name: org.postgresql.Driver
