@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-db-job
+  namespace: eduai
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: init-db
+          image: vercchy/init-db:latest
+          command: ["/bin/bash", "/init/init-db.sh"]
+          envFrom:
+            - configMapRef:
+                name: backend-config
+            - configMapRef:
+                name: db-config
+            - secretRef:
+                name: backend-secret
+            - secretRef:
+                name: shared-secret

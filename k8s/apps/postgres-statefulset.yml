@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: eduai-db
+  namespace: eduai
+spec:
+  serviceName: "eduai-db"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: eduai-db
+  template:
+    metadata:
+      labels:
+        app: eduai-db
+    spec:
+      containers:
+        - name: postgres
+          image: bitnami/postgresql:16
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POSTGRESQL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secret
+                  key: POSTGRES_USER
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRESQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: db-config
+                  key: POSTGRES_DB
+            - name: POSTGRESQL_REPLICATION_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_REPL_USER
+            - name: POSTGRESQL_REPLICATION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_REPL_PASSWORD
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi

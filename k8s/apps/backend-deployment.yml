@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eduai-backend
+  namespace: eduai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eduai-backend
+  template:
+    metadata:
+      labels:
+        app: eduai-backend
+    spec:
+      initContainers:
+        - name: wait-for-db-and-job
+          image: bitnami/postgresql:16
+          command:
+            - /bin/sh
+            - -c
+            - >
+              echo "Waiting for DB to be ready...";
+              until pg_isready -h postgres-write -p 5432 -U "$POSTGRES_USER"; do
+                sleep 2
+              done
+          envFrom:
+            - secretRef:
+                name: shared-secret
+      containers:
+        - name: backend
+          image: vercchy/eduai-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: db-config
+            - configMapRef:
+                name: backend-config
+            - secretRef:
+                name: shared-secret
+            - secretRef:
+                name: backend-secret

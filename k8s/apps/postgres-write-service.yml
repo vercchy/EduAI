@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-write
+  namespace: eduai
+spec:
+  selector:
+    statefulset.kubernetes.io/pod-name: eduai-db-0
+  ports:
+    - port: 5432
+      targetPort: 5432

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eduai-frontend
+  namespace: eduai
+spec:
+  selector:
+    app: eduai-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
