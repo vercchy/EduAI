@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
         - name: wait-for-db-and-job
-          image: bitnami/postgresql:16
+          image: bitnamilegacy/postgresql:16
           command:
             - /bin/sh
             - -c

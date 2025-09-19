@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: bitnami/postgresql:16
+          image: bitnamilegacy/postgresql:16
           imagePullPolicy: Always
           ports:
             - containerPort: 5432
